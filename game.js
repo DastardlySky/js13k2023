@@ -1,15 +1,15 @@
 kontra.init();
 
+var ground = 186;
+
 var obstacle = kontra.sprite({
     x: 256,
     y: 231,
     width: 25,
     height: 25,
     color: 'blue',
-    dx:-5,
+    dx: -3,
 });
-
-var ground = 186;
 
 var knight = kontra.sprite({
     x: 30,
@@ -24,6 +24,10 @@ var loop = kontra.gameLoop({
     update: function(){
         knight.update();
         obstacle.update();
+
+        if (obstacle.dx >= -10) {
+            obstacle.dx *= 1.0001;
+        }
 
         //jumping start
         const gravity = 0.3;
@@ -45,7 +49,7 @@ var loop = kontra.gameLoop({
         //jumping end
 
         if (obstacle.x <= -256){
-            obstacle.x = Math.floor(Math.random() * 768) + 256;
+            obstacle.x = Math.floor(Math.random() * 512) + 256;
         }
     },
     render: function() {
