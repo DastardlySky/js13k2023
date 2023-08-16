@@ -9,11 +9,13 @@ var obstacle = kontra.sprite({
     dx:-5,
 });
 
+var ground = 186;
+
 var knight = kontra.sprite({
-    x: 50,
-    y: 206,
-    width: 25,
-    height: 50,
+    x: 30,
+    y: ground,
+    width: 35,
+    height: 70,
     color: 'green',
     dx:0,
 });
@@ -30,13 +32,13 @@ var loop = kontra.gameLoop({
         knight.dy += gravity
 
         //if on (or below) ground, go to ground
-        if (knight.y >= 206){
-            knight.y = 206
+        if (knight.y >= ground){
+            knight.y = ground
         }
 
         //if on ground, make knight jump up
-        if (kontra.keys.pressed("up")){
-            if (knight.y >= 206){
+        if (kontra.keys.pressed("up") || kontra.keys.pressed("space")){
+            if (knight.y >= ground){
                 knight.dy = -5;
             }
         }
