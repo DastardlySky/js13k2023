@@ -94,17 +94,17 @@ let loop = GameLoop({
         }
         //jumping end
 
-        if (obstacle.x <= -256){
-            obstacle.x = Math.floor(Math.random() * 512) + 256;
+        let sprites = [obstacle, enemy, arrow];
+        var randomSprite = sprites[Math.floor(Math.random() * sprites.length)];
+
+        function spawnObstacle(sprite) {
+            if (sprite.x <= -256) {
+                sprite.x = Math.floor(Math.random() * 512) + 256;
+            }
         }
 
-        if (enemy.x <= -256){
-            enemy.x = Math.floor(Math.random() * 512) + 256;
-        }
+        spawnObstacle(randomSprite);
 
-        if (arrow.x <= -256){
-            arrow.x = Math.floor(Math.random() * 512) + 256;
-        }
     },
     render: function() {
         text.render();
