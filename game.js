@@ -1,8 +1,26 @@
-kontra.init();
+let { init, Sprite, GameLoop, initKeys, keyPressed, Text } = kontra
 
-var ground = 186;
+let { canvas } = init();
 
-var obstacle = kontra.sprite({
+initKeys();
+
+let ground = 186;
+
+let points = 1;
+
+let multiplier = 0.01
+
+let text = Text({
+    text: points,
+    font: '64px Arial',
+    color: 'black',
+    x: 128,
+    y: 100,
+    anchor: {x: 0.5, y: 0.5},
+    textAlign: 'center'
+  });
+
+let obstacle = Sprite({
     x: 256,
     y: 231,
     width: 25,
@@ -11,7 +29,7 @@ var obstacle = kontra.sprite({
     dx: -3,
 });
 
-var knight = kontra.sprite({
+let knight = Sprite({
     x: 30,
     y: ground,
     width: 35,
@@ -20,17 +38,24 @@ var knight = kontra.sprite({
     dx:0,
 });
 
-var loop = kontra.gameLoop({
+let loop = GameLoop({
     update: function(){
         knight.update();
         obstacle.update();
+        text.render();
 
         if (obstacle.dx >= -10) {
             obstacle.dx *= 1.0001;
         }
 
+        // points system start
+        multiplier += 0.00001
+        points = points + multiplier;
+        text.text = Math.floor(points);
+        //points system end
+
         //jumping start
-        const gravity = 0.3;
+        let gravity = 0.3;
 
         //make knight fall
         knight.dy += gravity
@@ -41,7 +66,7 @@ var loop = kontra.gameLoop({
         }
 
         //if on ground, make knight jump up
-        if (kontra.keys.pressed("up") || kontra.keys.pressed("space")){
+        if (keyPressed("arrowup") || keyPressed("space")){
             if (knight.y >= ground){
                 knight.dy = -5;
             }
@@ -53,6 +78,7 @@ var loop = kontra.gameLoop({
         }
     },
     render: function() {
+        text.render();
         knight.render();
         obstacle.render();
     }
