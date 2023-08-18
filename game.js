@@ -89,7 +89,7 @@ let loop = GameLoop({
         //if on ground, make knight jump up
         if (keyPressed("arrowup") || keyPressed("space")){
             if (knight.y >= ground){
-                knight.dy = -5;
+                knight.dy = -5.5;
             }
         }
         //jumping end
