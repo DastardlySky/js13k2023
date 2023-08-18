@@ -1,4 +1,4 @@
-let { init, Sprite, GameLoop, initKeys, keyPressed, Text } = kontra
+let { init, Sprite, GameLoop, initKeys, keyPressed, Text, collides } = kontra
 
 let { canvas } = init();
 
@@ -95,15 +95,33 @@ let loop = GameLoop({
         //jumping end
 
         let sprites = [obstacle, enemy, arrow];
-        var randomSprite = sprites[Math.floor(Math.random() * sprites.length)];
 
-        function spawnObstacle(sprite) {
-            if (sprite.x <= -256) {
-                sprite.x = Math.floor(Math.random() * 512) + 256;
+        for (let sprite of sprites){
+            if (collides(knight, sprite)) {
+                alert("GAME OVER!!!");
             }
         }
 
-        spawnObstacle(randomSprite);
+        function isCloseToOtherSprites(newSpriteX, currentSprite, sprites) {
+            for (let sprite of sprites) {
+                if (sprite !== currentSprite && Math.abs(sprite.x - newSpriteX) < 300) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+
+        for (let sprite of sprites){
+            if (sprite.x <= -50) {
+                let newSpriteX;
+                do {
+                    newSpriteX = Math.floor(Math.random() * 1280) + 256;
+                } while (isCloseToOtherSprites(newSpriteX, sprite, sprites) == true);
+                
+                sprite.x = newSpriteX;
+            }
+}
 
     },
     render: function() {
