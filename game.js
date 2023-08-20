@@ -9,6 +9,7 @@ let points = 1;
 let multiplier = 0.0001;
 var AttackCooldown = 0;
 var duckCooldown = 0;
+var activeScene = "menu"
 
 
 let text = Text({
@@ -80,6 +81,13 @@ let game = Scene({
 
 let loop = GameLoop({
   update: function () {
+    if (activeScene == "menu"){
+      if (keyPressed("enter")){
+        activeScene = "game"
+      }
+    }
+    if (activeScene == "game")
+    {
     knight.update();
     obstacle.update();
     enemy.update();
@@ -186,10 +194,14 @@ let loop = GameLoop({
 
     // update sword position when jumping
     sword.y = knight.y + 30;
-  },
+  }
+},
   render: function () {
     start.render();
-    if (1==1) {
+    if (activeScene == "menu") {
+      start.render();
+    }
+    else if (activeScene == "game"){
       game.render();
     }
   },
