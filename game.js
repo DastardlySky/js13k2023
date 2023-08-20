@@ -1,4 +1,4 @@
-let { init, Sprite, GameLoop, initKeys, keyPressed, Text, collides } = kontra;
+let { init, Sprite, Scene, GameLoop, initKeys, keyPressed, Text, collides } = kontra;
 
 let { canvas } = init();
 
@@ -66,6 +66,12 @@ let sword = Sprite({
   opacity: 0,
 });
 
+scene = Scene({
+  id: 'game',
+  objects: []
+});
+
+
 var cooldown = 0;
 
 let loop = GameLoop({
@@ -100,7 +106,7 @@ let loop = GameLoop({
     }
 
     //if on ground, make knight jump up
-    if ((keyPressed("arrowup") || keyPressed("space"))) {
+    if ((keyPressed("arrowup") || keyPressed("space")) && sword.opacity == 0) {
       if (knight.y >= ground) {
         knight.dy = -5.5;
         // sword cooldown
