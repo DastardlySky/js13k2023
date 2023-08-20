@@ -5,10 +5,9 @@ let { canvas } = init();
 initKeys();
 
 let ground = 186;
-
 let points = 1;
-
 let multiplier = 0.0001;
+var cooldown = 0;
 
 let text = Text({
   text: points,
@@ -66,12 +65,16 @@ let sword = Sprite({
   opacity: 0,
 });
 
-scene = Scene({
-  id: 'game',
+let start = Scene({
+  id: 'start',
+  color: "pink",
   objects: []
 });
 
-var cooldown = 0;
+let game = Scene({
+  id: 'game',
+  objects: [knight, obstacle, enemy, arrow, sword, text],
+});
 
 let loop = GameLoop({
   update: function () {
@@ -143,7 +146,7 @@ let loop = GameLoop({
 
     for (let sprite of sprites) {
       if (collides(knight, sprite)) {
-        alert("GAME OVER!!!");
+        // alert("GAME OVER!!!");
       }
     }
 
@@ -171,13 +174,11 @@ let loop = GameLoop({
     sword.y = knight.y + 30;
   },
   render: function () {
-    text.render();
-    knight.render();
-    obstacle.render();
-    enemy.render();
-    arrow.render();
-    sword.render();
+    start.render();
+    if (keyPressed("enter")) {
+      game.render();
+    }
   },
 });
 
-loop.start();
+loop.start()
