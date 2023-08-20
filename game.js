@@ -7,7 +7,9 @@ initKeys();
 let ground = 186;
 let points = 1;
 let multiplier = 0.0001;
-var cooldown = 0;
+var AttackCooldown = 0;
+var duckCooldown = 0;
+
 
 let text = Text({
   text: points,
@@ -111,17 +113,15 @@ let loop = GameLoop({
     if ((keyPressed("arrowup") || keyPressed("space"))) {
       if (knight.y >= ground) {
         knight.dy = -5.5;
-        // sword cooldown
-        cooldown = 60;
       }
     }
     //jumping end
 
     // attack start
-    if ((keyPressed("arrowdown")) && (cooldown == 0) && knight.y >= ground) {
+    if ((keyPressed("arrowright")) && (AttackCooldown == 0) && knight.y >= ground) {
       // show sword
       sword.opacity = 1;
-      cooldown = 60;
+      AttackCooldown = 60;
     }
 
     // if sword is showing
@@ -130,17 +130,31 @@ let loop = GameLoop({
       if (collides(sword, enemy)) {
         enemy.x = -256;
       }
-      cooldown -= 1;
+      AttackCooldown -= 1;
     }
 
-    if (cooldown > 0) {
-      cooldown -= 1;
-      if (cooldown < 30) {
+    if (AttackCooldown > 0) {
+      AttackCooldown -= 1;
+      if (AttackCooldown < 30) {
         // hide sword
         sword.opacity = 0;
       }
     }
     // attack end
+
+    //duck start
+    if ((AttackCooldown == 0) && keyPressed("arrowdown")){
+      duckCooldown = 60;
+    }
+
+    if (duckCooldown > 0){
+      knight.height = 30;
+      knight.y = 226;
+      duckCooldown -= 1
+    }
+    else{
+      knight.height = 70;
+    }
 
     let sprites = [obstacle, enemy, arrow];
 
@@ -175,7 +189,7 @@ let loop = GameLoop({
   },
   render: function () {
     start.render();
-    if (keyPressed("enter")) {
+    if (1==1) {
       game.render();
     }
   },
