@@ -71,7 +71,6 @@ scene = Scene({
   objects: []
 });
 
-
 var cooldown = 0;
 
 let loop = GameLoop({
@@ -106,7 +105,7 @@ let loop = GameLoop({
     }
 
     //if on ground, make knight jump up
-    if ((keyPressed("arrowup") || keyPressed("space")) && sword.opacity == 0) {
+    if ((keyPressed("arrowup") || keyPressed("space"))) {
       if (knight.y >= ground) {
         knight.dy = -5.5;
         // sword cooldown
@@ -167,6 +166,9 @@ let loop = GameLoop({
         sprite.x = newSpriteX;
       }
     }
+
+    // update sword position when jumping
+    sword.y = knight.y + 30;
   },
   render: function () {
     text.render();
