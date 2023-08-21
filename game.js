@@ -39,9 +39,9 @@ let text = Text({
 
 let obstacle = Sprite({
   x: 256,
-  y: 231,
-  width: 25,
-  height: 25,
+  y: 236,
+  width: 20,
+  height: 20,
   color: "blue",
   dx: -3,
 });
@@ -71,10 +71,13 @@ let knight = Sprite({
   height: 70,
   color: "green",
   dx: 0,
+  attacking: false,
+  ducking: false,
+  jumping: false,
 });
 
 let sword = Sprite({
-  x: 65,
+  x: 50,
   y: 220,
   width: 50,
   height: 10,
@@ -130,63 +133,70 @@ let loop = GameLoop({
     //if on (or below) ground, go to ground
     if (knight.y >= ground) {
       knight.y = ground;
+      knight.jumping = false;
     }
 
     //if on ground, make knight jump up
-    if ((keyPressed("arrowup") || keyPressed("space"))) {
+    if ((keyPressed("arrowup") || keyPressed("space")) && knight.ducking == false) {
       if (knight.y >= ground) {
+        if(knight.attacking == false && knight.ducking == false){
         zzfx(...[,,69,.01,.02,.14,1,1.42,8.3,,,,,.1,,,,.7,.09]); // jump
-        knight.dy = -5.5;
+        }
+        knight.dy = -5;
+        knight.jumping = true;
       }
     }
     //jumping end
 
     // attack start
-    if ((keyPressed("arrowright")) && (AttackCooldown == 0) && knight.y >= ground) {
+    if ((keyPressed("arrowright")) && (AttackCooldown == 0) && (knight.ducking == false) && knight.y >= ground) {
       // show sword
       zzfx(...[1.07,,1260,.02,.07,,1,1.61,5.7,1.8,,,,,5,,,.75]); // hit
       sword.opacity = 1;
-      AttackCooldown = 60;
+      AttackCooldown = 30;
     }
 
     // if sword is showing
     if (sword.opacity == 1) {
       // check for collisions
       if (collides(sword, enemy)) {
-        enemy.x = -256;
+        enemy.x = -50;
       }
       AttackCooldown -= 1;
+      sword.x += 1;
     }
 
     if (AttackCooldown > 0) {
       AttackCooldown -= 1;
-      if (AttackCooldown < 30) {
+      if (AttackCooldown < 15) {
         // hide sword
         sword.opacity = 0;
+        sword.x = 50;
       }
     }
     // attack end
 
     //duck start
-    if ((AttackCooldown == 0) && keyPressed("arrowdown")){
+    if (keyPressed("arrowdown") && knight.jumping == false){
+      if (knight.ducking == false){
       zzfx(...[,,-5,.03,.02,.08,1,.19,1.6,1.1,200,,,,2,,,.67,.02]); // duck
+      }
+      knight.ducking = true;
       duckCooldown = 60;
-    }
-
-    if (duckCooldown > 0){
       knight.height = 30;
       knight.y = 226;
       duckCooldown -= 1
     }
     else{
       knight.height = 70;
+      knight.ducking = false;
     }
 
     let sprites = [obstacle, enemy, arrow];
 
     for (let sprite of sprites) {
       if (collides(knight, sprite)) {
-        // alert("GAME OVER!!!");
+        // points = "GAME OVER!!!";
       }
     }
 
@@ -203,7 +213,7 @@ let loop = GameLoop({
       if (sprite.x <= -50) {
         let newSpriteX;
         do {
-          newSpriteX = Math.floor(Math.random() * 1280) + 256;
+          newSpriteX = Math.floor(Math.random() * 2048) + 512;
         } while (isCloseToOtherSprites(newSpriteX, sprite, sprites) == true);
 
         sprite.x = newSpriteX;
@@ -213,6 +223,7 @@ let loop = GameLoop({
     // update sword position when jumping
     sword.y = knight.y + 30;
   }
+  console.log(obstacle.dx);
 },
   render: function () {
     start.render();
