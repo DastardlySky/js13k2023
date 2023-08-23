@@ -27,7 +27,7 @@ var duckCooldown = 0;
 var activeScene = "menu"
 
 
-let text = Text({
+let pointsText = Text({
   text: points,
   font: "20px Arial",
   color: "black",
@@ -35,6 +35,18 @@ let text = Text({
   y: 25,
   anchor: { x: 0.5, y: 0.5 },
   textAlign: "center",
+});
+
+
+let gameOverText = Text({
+  text: "Game Over",
+  font: "50px Arial",
+  color: "black",
+  x: 256,
+  y: 128,
+  anchor: { x: 0.5, y: 0.5 },
+  textAlign: "center",
+  opacity:0,
 });
 
 let obstacle = Sprite({
@@ -94,8 +106,10 @@ let start = Scene({
 
 let game = Scene({
   id: 'game',
-  objects: [knight, obstacle, enemy, arrow, sword, text],
+  objects: [knight, obstacle, enemy, arrow, sword, pointsText, gameOverText],
 });
+
+let gameOver = false;
 
 let loop = GameLoop({
   update: function () {
@@ -112,7 +126,7 @@ let loop = GameLoop({
     arrow.update();
     sword.update();
 
-    if (obstacle.dx >= -10) {
+    if (obstacle.dx >= -10 && !gameOver) {
       obstacle.dx *= 1.0001;
       enemy.dx *= 1.0001;
       arrow.dx *= 1.0001;
@@ -120,8 +134,8 @@ let loop = GameLoop({
 
     // points system start
     multiplier += 0.00001;
-    points = points + multiplier;
-    text.text = Math.floor(points);
+    if (!gameOver){points = points + multiplier;}
+    pointsText.text = Math.floor(points);
     //points system end
 
     //jumping start
@@ -137,7 +151,7 @@ let loop = GameLoop({
     }
 
     //if on ground, make knight jump up
-    if ((keyPressed("arrowup") || keyPressed("space")) && knight.ducking == false) {
+    if ((keyPressed("arrowup") || keyPressed("space")) && knight.ducking == false && !gameOver) {
       if (knight.y >= ground) {
         if(knight.attacking == false && knight.ducking == false){
         zzfx(...[,,69,.01,.02,.14,1,1.42,8.3,,,,,.1,,,,.7,.09]); // jump
@@ -149,7 +163,7 @@ let loop = GameLoop({
     //jumping end
 
     // attack start
-    if ((keyPressed("arrowright")) && (AttackCooldown == 0) && (knight.ducking == false) && knight.y >= ground) {
+    if ((keyPressed("arrowright")) && (AttackCooldown == 0) && (knight.ducking == false) && knight.y >= ground && !gameOver) {
       // show sword
       zzfx(...[1.07,,1260,.02,.07,,1,1.61,5.7,1.8,,,,,5,,,.75]); // hit
       sword.opacity = 1;
@@ -177,7 +191,7 @@ let loop = GameLoop({
     // attack end
 
     //duck start
-    if (keyPressed("arrowdown") && knight.jumping == false){
+    if (keyPressed("arrowdown") && knight.jumping == false && !gameOver){
       if (knight.ducking == false){
       zzfx(...[,,-5,.03,.02,.08,1,.19,1.6,1.1,200,,,,2,,,.67,.02]); // duck
       }
@@ -194,11 +208,25 @@ let loop = GameLoop({
 
     let sprites = [obstacle, enemy, arrow];
 
+    // check for a game over
     for (let sprite of sprites) {
       if (collides(knight, sprite)) {
-        // points = "GAME OVER!!!";
+        if (!gameOver){
+        zzfx(...[,,348,.1,.14,.46,,.14,-0.1,-2.8,-62,.08,.06,,,.1,,.48,.26]); // game over sound effect
+        gameOver = true;
+        }
       }
     }
+
+    if (gameOver){
+      knight.y = 221;
+      knight.width = 70;
+      knight.height = 35;
+      obstacle.dx = 0;
+      enemy.dx = 0;
+      gameOverText.opacity = 1;
+    }
+    // end
 
     function isCloseToOtherSprites(newSpriteX, currentSprite, sprites) {
       for (let sprite of sprites) {
