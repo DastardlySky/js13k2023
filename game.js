@@ -226,6 +226,20 @@ let loop = GameLoop({
       enemy.dx = 0;
       gameOverText.opacity = 1;
     }
+
+    if (gameOver){
+      if(keyPressed("enter")){
+        gameOver = false
+        gameOverText.opacity = 0;
+        knight.width = 35;
+        points = 0;
+        multiplier = 0.0001;
+        obstacle.x = 256;
+        obstacle.dx = -3
+        enemy.x = 512;
+        arrow.x = 768;
+      }
+    }
     // end
 
     function isCloseToOtherSprites(newSpriteX, currentSprite, sprites) {
