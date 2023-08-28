@@ -21,6 +21,7 @@ initKeys();
 
 let ground = 186;
 let points = 1;
+let highScore = localStorage.getItem("highScore") || 0;
 let multiplier = 0.0001;
 var AttackCooldown = 0;
 var duckCooldown = 0;
@@ -37,6 +38,15 @@ let pointsText = Text({
   textAlign: "center",
 });
 
+let highScoreText = Text({
+  text: `High Score: ${Math.floor(highScore)}`,
+  font: "20px Arial",
+  color: "black",
+  x: 256,
+  y: 128,
+  anchor: { x: 0.5, y: 0.5 },
+  textAlign: "center",
+});
 
 let gameOverText = Text({
   text: "Game Over",
@@ -101,7 +111,7 @@ let sword = Sprite({
 let start = Scene({
   id: 'start',
   color: "pink",
-  objects: []
+  objects: [highScoreText]
 });
 
 let game = Scene({
@@ -136,6 +146,12 @@ let loop = GameLoop({
     multiplier += 0.00001;
     if (!gameOver){points = points + multiplier;}
     pointsText.text = Math.floor(points);
+
+    if (points > highScore) {
+      highScore = points;
+      localStorage.setItem("highScore", highScore);
+    }
+    
     //points system end
 
     //jumping start
@@ -268,7 +284,6 @@ let loop = GameLoop({
   console.log(obstacle.dx);
 },
   render: function () {
-    start.render();
     if (activeScene == "menu") {
       start.render();
     }
