@@ -172,7 +172,7 @@ let loop = GameLoop({
     arrow.update();
     sword.update();
 
-    if (obstacle.dx >= -10 && !gameOver) {
+    if (obstacle.dx >= -13 && !gameOver) {
       obstacle.dx *= 1.0001;
       enemy.dx *= 1.0001;
       arrow.dx *= 1.0001;
@@ -289,7 +289,9 @@ let loop = GameLoop({
         obstacle.x = 256;
         obstacle.dx = -3
         enemy.x = 512;
+        enemy.dx = -3
         arrow.x = 768;
+        arrow.dx = -3
       }
     }
     // end
