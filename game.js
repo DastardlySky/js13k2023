@@ -14,6 +14,55 @@ var AttackCooldown = 0;
 var duckCooldown = 0;
 var activeScene = "menu"
 
+  // Custom function to draw pixel art text
+  function drawPixelText(context, text, x, y, font, threshold, scalingFactor) {
+    let offscreenCanvas = document.createElement('canvas');
+    offscreenCanvas.width = 250;
+    offscreenCanvas.height = 32;
+    let d = offscreenCanvas.getContext('2d');
+
+    d.font = font;
+    d.textBaseline = "middle";
+    d.fillText(text, 0, 16);
+
+    let I = d.getImageData(0, 0, 250, 32);
+
+    for(let i = 0; i < 250; i++) {
+      for(let j = 0; j < 32; j++) {
+        if(
+          I.data[(j * 250 + i) * 4 + 1] > threshold ||
+          I.data[(j * 250 + i) * 4 + 2] > threshold ||
+          I.data[(j * 250 + i) * 4 + 3] > threshold
+        ) {
+          context.fillRect(x + i * scalingFactor, y + j * scalingFactor, scalingFactor, scalingFactor);
+        }
+      }
+    }
+  }
+
+let knightGameText = Sprite({
+  x: 170,
+  y: 75,
+  width: 512,
+  height: 256,
+  anchor: { x: 0.5, y: 0.5 },
+  render() {
+    drawPixelText(this.context, 'KNIGHT GAME', this.x, this.y, '16px Ariel', 50, 3);
+  }
+});
+
+let pressStartText = Sprite({
+  x: 190,
+  y: 110,
+  width: 512,
+  height: 256,
+  anchor: { x: 0.5, y: 0.5 },
+  render() {
+    drawPixelText(this.context, 'Press Enter to Start', this.x, this.y, '16px Ariel', 50, 2);
+  }
+});
+
+
 
 let pointsText = Text({
   text: points,
@@ -98,7 +147,7 @@ let sword = Sprite({
 let start = Scene({
   id: 'start',
   color: "pink",
-  objects: [highScoreText]
+  objects: [knightGameText, pressStartText]
 });
 
 let game = Scene({
