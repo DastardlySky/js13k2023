@@ -226,7 +226,7 @@ let loop = GameLoop({
     if (sword.opacity == 1) {
       // check for collisions
       if (collides(sword, enemy)) {
-        enemy.x = -50;
+        enemy.y = -50;
       }
       AttackCooldown -= 1;
       sword.x += 1;
@@ -296,23 +296,10 @@ let loop = GameLoop({
     }
     // end
 
-    function isCloseToOtherSprites(newSpriteX, currentSprite, sprites) {
-      for (let sprite of sprites) {
-        if (sprite !== currentSprite && Math.abs(sprite.x - newSpriteX) < 300) {
-          return true;
-        }
-      }
-      return false;
-    }
-
     for (let sprite of sprites) {
       if (sprite.x <= -50) {
-        let newSpriteX;
-        do {
-          newSpriteX = Math.floor(Math.random() * 2048) + 512;
-        } while (isCloseToOtherSprites(newSpriteX, sprite, sprites) == true);
-
-        sprite.x = newSpriteX;
+        sprite.x = 768;
+        enemy.y = 206;
       }
     }
 
