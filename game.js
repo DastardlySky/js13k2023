@@ -83,6 +83,17 @@ let pressStartText = Sprite({
   }
 });
 
+let highScoreMainText = Sprite({
+  x: 197,
+  y: 140,
+  width: 512,
+  height: 256,
+  anchor: { x: 0.5, y: 0.5 },
+  render() {
+    drawPixelText(this.context, `High Score: ${Math.floor(highScore)}`, this.x, this.y, '16px Ariel', 50, 2);
+  }
+});
+
 
 
 let pointsText = Text({
@@ -168,7 +179,7 @@ let sword = Sprite({
 let start = Scene({
   id: 'start',
   color: "pink",
-  objects: [knightGameText, pressStartText]
+  objects: [knightGameText, pressStartText, highScoreMainText]
 });
 
 let game = Scene({
