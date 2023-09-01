@@ -1,12 +1,16 @@
-import { init, Sprite, Scene, GameLoop, initKeys, keyPressed, Text, collides } from "./kontra.js";
+import { init, Sprite, SpriteSheet, Scene, GameLoop, initKeys, keyPressed, Text, collides } from "./kontra.js";
 import {ZZFX, zzfx} from './ZzFX.js'
 
-let { canvas } = init();
+let { canvas, context } = init();
+context.imageSmoothingEnabled = false;
+
+let image = new Image();
+image.onload = function() {
 
 
 initKeys();
 
-let ground = 186;
+let ground = 192;
 let points = 1;
 let highScore = localStorage.getItem("highScore") || 0;
 let multiplier = 0.0001;
@@ -39,6 +43,23 @@ var activeScene = "menu"
       }
     }
   }
+
+  let spriteSheet = SpriteSheet({
+    image: image,
+    frameWidth: 16,
+    frameHeight: 32,
+    animations: {
+      // create a named animation: knightWalk
+      knightWalk: {
+        frames: '1..1',  // frames 0 through 9
+        frameRate: 30
+      },
+      enemyWalk: {
+        frames: '0..0',  // frames 0 through 9
+        frameRate: 30
+      }
+    }
+  });
 
 let knightGameText = Sprite({
   x: 170,
@@ -106,10 +127,10 @@ let obstacle = Sprite({
 
 let enemy = Sprite({
   x: 512,
-  y: 206,
-  width: 25,
-  height: 50,
-  color: "red",
+  y: ground,
+  width: 32,
+  height: 64,
+  animations: spriteSheet.animations,
   dx: -3,
 });
 
@@ -125,13 +146,13 @@ let arrow = Sprite({
 let knight = Sprite({
   x: 30,
   y: ground,
-  width: 35,
-  height: 70,
-  color: "green",
+  width: 32,
+  height: 64,
   dx: 0,
   attacking: false,
   ducking: false,
   jumping: false,
+  animations: spriteSheet.animations
 });
 
 let sword = Sprite({
@@ -167,8 +188,10 @@ let loop = GameLoop({
     if (activeScene == "game")
     {
     knight.update();
+    knight.playAnimation('knightWalk');
     obstacle.update();
     enemy.update();
+    enemy.playAnimation('enemyWalk');
     arrow.update();
     sword.update();
 
@@ -226,7 +249,7 @@ let loop = GameLoop({
     if (sword.opacity == 1) {
       // check for collisions
       if (collides(sword, enemy)) {
-        enemy.y = -50;
+        enemy.y = -100;
       }
       AttackCooldown -= 1;
       sword.x += 1;
@@ -254,7 +277,7 @@ let loop = GameLoop({
       duckCooldown -= 1
     }
     else{
-      knight.height = 70;
+      knight.height = 64;
       knight.ducking = false;
     }
 
@@ -271,9 +294,9 @@ let loop = GameLoop({
     }
 
     if (gameOver){
-      knight.y = 221;
-      knight.width = 70;
-      knight.height = 35;
+      knight.y = 229;
+      knight.width = 64;
+      knight.height = 32;
       obstacle.dx = 0;
       enemy.dx = 0;
       gameOverText.opacity = 1;
@@ -283,7 +306,7 @@ let loop = GameLoop({
       if(keyPressed("enter")){
         gameOver = false
         gameOverText.opacity = 0;
-        knight.width = 35;
+        knight.width = 32;
         points = 0;
         multiplier = 0.0001;
         obstacle.x = 256;
@@ -299,7 +322,7 @@ let loop = GameLoop({
     for (let sprite of sprites) {
       if (sprite.x <= -50) {
         sprite.x = 768;
-        enemy.y = 206;
+        enemy.y = ground;
       }
     }
 
@@ -319,3 +342,6 @@ let loop = GameLoop({
 });
 
 loop.start()
+};
+
+image.src = 'sheet.png';
