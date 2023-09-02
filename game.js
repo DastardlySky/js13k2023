@@ -4,10 +4,30 @@ import { init, Sprite, SpriteSheet, Scene, GameLoop, initKeys, keyPressed, Text,
 let { canvas, context } = init();
 context.imageSmoothingEnabled = false;
 
-const song = [[[,0,25,.002,.02,.08,3,,,,,,,,,.1,.01]],[[[,,13,,,,13,,,15,17,,13,,17,,20,,25,,,,25,,,24,25,,20,,17,,13,,18,,,,22,,,18,17,,20,,17,,13,,15,,,,20,,,22,20,,18,,17,,15,,]]],[0],,{"title":"Scotland The Brave","instruments":["Poly Synth"],"patterns":["Pattern 0"]}]
+let gameOver = false;
 
-// Create a song
-let mySongData = zzfxM(...song);
+let bpm = 120;
+let node = null;
+
+const playSong = () => {
+  let song = [[[,0,25,.002,.02,.08,3,,,,,,,,,.1,.01]],[[[,,13,,,,13,,,15,17,,13,,17,,20,,25,,,,25,,,24,25,,20,,17,,13,,18,,,,22,,,18,17,,20,,17,,13,,15,,,,20,,,22,20,,18,,17,,15,,]]],[0],bpm,{"title":"Scotland The Brave","instruments":["Poly Synth"],"patterns":["Pattern 0"]}]
+  // Generate the sample data and play the song
+  let buffer = zzfxM(...song);
+  node = zzfxP(...buffer);
+
+  // Attach an onended event to update BPM and play again
+  node.onended = function() {
+    console.log("Audio has ended.");
+    
+    // Increase BPM
+    bpm += 20;
+    
+    // Play the song again with updated BPM
+    if (!gameOver){
+      playSong();
+    }
+  };
+};
 
 
 let image = new Image();
@@ -68,13 +88,13 @@ var activeScene = "menu"
   });
 
 let knightGameText = Sprite({
-  x: 170,
-  y: 75,
+  x: 135,
+  y: 80,
   width: 512,
   height: 256,
   anchor: { x: 0.5, y: 0.5 },
   render() {
-    drawPixelText(this.context, 'KNIGHT GAME', this.x, this.y, '16px Ariel', 50, 3);
+    drawPixelText(this.context, 'FREEEDOOOM!!!!!!!', this.x, this.y, '20px Ariel', 10, 3);
   }
 });
 
@@ -193,16 +213,15 @@ let game = Scene({
   objects: [knight, obstacle, enemy, arrow, sword, pointsText, gameOverText],
 });
 
-let gameOver = false;
-
 let loop = GameLoop({
   update: function () {
     if (activeScene == "menu"){
       if (keyPressed("enter")){
+        if (!gameOver){
+          playSong();
+        }
         activeScene = "game"
-        // Play the song (returns a AudioBufferSourceNode)
-        let myAudioNode = zzfxP(...mySongData);
-        myAudioNode.loop = true;
+        node.loop = true;
       }
     }
     if (activeScene == "game")
@@ -320,10 +339,13 @@ let loop = GameLoop({
       obstacle.dx = 0;
       enemy.dx = 0;
       gameOverText.opacity = 1;
+      bpm = 120;
+      node.stop();
     }
 
     if (gameOver){
       if(keyPressed("enter")){
+        playSong();
         gameOver = false
         gameOverText.opacity = 0;
         knight.width = 32;
