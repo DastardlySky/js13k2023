@@ -1,8 +1,14 @@
-import { init, Sprite, SpriteSheet, Scene, GameLoop, initKeys, keyPressed, Text, collides } from "./kontra.js";
-import {ZZFX, zzfx} from './ZzFX.js'
+import { init, Sprite, SpriteSheet, Scene, GameLoop, initKeys, keyPressed, Text, collides } from "./libs/kontra.js";
+
 
 let { canvas, context } = init();
 context.imageSmoothingEnabled = false;
+
+const song = [[[,0,25,.002,.02,.08,3,,,,,,,,,.1,.01]],[[[,,13,,,,13,,,15,17,,13,,17,,20,,25,,,,25,,,24,25,,20,,17,,13,,18,,,,22,,,18,17,,20,,17,,13,,15,,,,20,,,22,20,,18,,17,,15,,]]],[0],,{"title":"Scotland The Brave","instruments":["Poly Synth"],"patterns":["Pattern 0"]}]
+
+// Create a song
+let mySongData = zzfxM(...song);
+
 
 let image = new Image();
 image.onload = function() {
@@ -73,7 +79,7 @@ let knightGameText = Sprite({
 });
 
 let pressStartText = Sprite({
-  x: 190,
+  x: 189,
   y: 110,
   width: 512,
   height: 256,
@@ -84,11 +90,11 @@ let pressStartText = Sprite({
 });
 
 let highScoreMainText = Sprite({
-  x: 197,
-  y: 140,
+  x: 10,
+  y: 165,
   width: 512,
   height: 256,
-  anchor: { x: 0.5, y: 0.5 },
+  anchor: { x: 0, y: 0.5 },
   render() {
     drawPixelText(this.context, `High Score: ${Math.floor(highScore)}`, this.x, this.y, '16px Ariel', 50, 2);
   }
@@ -194,6 +200,9 @@ let loop = GameLoop({
     if (activeScene == "menu"){
       if (keyPressed("enter")){
         activeScene = "game"
+        // Play the song (returns a AudioBufferSourceNode)
+        let myAudioNode = zzfxP(...mySongData);
+        myAudioNode.loop = true;
       }
     }
     if (activeScene == "game")
@@ -340,7 +349,7 @@ let loop = GameLoop({
     // update sword position when jumping
     sword.y = knight.y + 30;
   }
-  console.log(obstacle.dx);
+  // console.log(obstacle.dx);
 },
   render: function () {
     if (activeScene == "menu") {
