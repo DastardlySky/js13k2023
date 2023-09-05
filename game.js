@@ -149,13 +149,12 @@ let highScoreMainText = Sprite({
 });
 
 let pointsText = Text({
-  text: points,
-  font: "20px Arial",
-  color: "black",
-  x: 25,
-  y: 25,
+  x: 7,
+  y: 1,
   anchor: { x: 0.5, y: 0.5 },
-  textAlign: "center",
+  render() {
+    drawPixelText(this.context, `${Math.floor(points)}`, this.x, this.y, '16px Ariel', 50, 2);
+  }
 });
 
 let gameOverText = Text({
