@@ -5,29 +5,9 @@ let { canvas, context } = init();
 context.imageSmoothingEnabled = false;
 
 let gameOver = false;
-
 let bpm = 100;
 let node = null;
-
-const playSong = () => {
-  let song = [[[,0,25,.002,.02,.08,3,,,,,,,,,.1,.01]],[[[,,13,,,,13,,,15,17,,13,,17,,20,,25,,,,25,,,24,25,,20,,17,,13,,18,,,,22,,,18,17,,20,,17,,13,,15,,,,20,,,22,20,,18,,17,,15,,]],[[,,13,,,,13,,,15,17,,13,,17,,20,,25,,,,25,,,24,25,,20,,17,,13,,18,,,,22,,,18,17,,20,,17,,13,,15,,,,13,,,12,13,,,,24,,,25]],[[,,27,,,,27,,,27,27,,24,,20,,,,25,,,,29,,,27,25,,22,,20,,,,25,,,,25,,,25,25,,,,25,,,24,22,,25,,24,,22,,20,,18,,17,,15,,]],[[,,13,,,,13,,,15,17,,13,,17,,20,,25,,,,25,,,24,25,,20,,17,,13,,18,,,,22,,,18,17,,20,,17,,13,,15,,,,13,,,12,13,,,,,,,,]]],[0,1,2,3],bpm,{"title":"Scotland The Brave","instruments":["Poly Synth"],"patterns":["Pattern 0","Pattern 1","Pattern 2","Pattern 3"]}]
-  // Generate the sample data and play the song
-  let buffer = zzfxM(...song);
-  node = zzfxP(...buffer);
-
-  // Attach an onended event to update BPM and play again
-  node.onended = function() {
-    console.log("Audio has ended.");
-    
-    // Increase BPM
-    bpm += 20;
-    
-    // Play the song again with updated BPM
-    if (!gameOver){
-      playSong();
-    }
-  };
-};
+let playingSong = true;
 
 
 let image = new Image();
@@ -38,12 +18,36 @@ initKeys();
 
 let ground = 192;
 let gravity = 0.3;
-let points = 1;
+let points = 0;
 let highScore = localStorage.getItem("highScore") || 0;
 let multiplier = 0.0001;
 var AttackCooldown = 0;   
 var duckCooldown = 0;
 var activeScene = "menu"
+
+function playSong() {
+  console.log(bpm);
+  let song = [[[,0,25,.002,.02,.08,3,,,,,,,,,.1,.01]],[[[,,13,,,,13,,,15,17,,13,,17,,20,,25,,,,25,,,24,25,,20,,17,,13,,18,,,,22,,,18,17,,20,,17,,13,,15,,,,20,,,22,20,,18,,17,,15,,]],[[,,13,,,,13,,,15,17,,13,,17,,20,,25,,,,25,,,24,25,,20,,17,,13,,18,,,,22,,,18,17,,20,,17,,13,,15,,,,13,,,12,13,,,,24,,,25]],[[,,27,,,,27,,,27,27,,24,,20,,,,25,,,,29,,,27,25,,22,,20,,,,25,,,,25,,,25,25,,,,25,,,24,22,,25,,24,,22,,20,,18,,17,,15,,]],[[,,13,,,,13,,,15,17,,13,,17,,20,,25,,,,25,,,24,25,,20,,17,,13,,18,,,,22,,,18,17,,20,,17,,13,,15,,,,13,,,12,13,,,,,,,,]]],[0,1,2,3],bpm,{"title":"Scotland The Brave","instruments":["Poly Synth"],"patterns":["Pattern 0","Pattern 1","Pattern 2","Pattern 3"]}]
+  // Generate the sample data and play the song
+  let buffer = zzfxM(...song);
+  node = zzfxP(...buffer);
+  playingSong = true;
+
+  // Attach an onended event to update BPM and play again
+  node.onended = function() {
+    playingSong = false;
+    
+    // Increase BPM
+    if (points >= 1){
+    bpm += 20;
+    }
+    
+    // Play the song again with updated BPM
+    if (!gameOver && !playingSong){
+      playSong();
+    }
+  };
+};
 
   // Custom function to draw pixel art text
   function drawPixelText(context, text, x, y, font, threshold, scalingFactor) {
@@ -71,18 +75,29 @@ var activeScene = "menu"
     }
   }
 
-  let spriteSheet = SpriteSheet({
+  let characterSheet = SpriteSheet({
     image: image,
     frameWidth: 16,
     frameHeight: 32,
     animations: {
-      // create a named animation: knightWalk
       knightWalk: {
-        frames: '1..1',  // frames 0 through 9
+        frames: '1..1',
         frameRate: 30
       },
       enemyWalk: {
-        frames: '0..0',  // frames 0 through 9
+        frames: '0..0',
+        frameRate: 30
+      }
+    }
+  });
+
+  let backgroundSheet = SpriteSheet({
+    image: image,
+    frameWidth: 512,
+    frameHeight: 256,
+    animations: {
+      default: {
+        frames: '1..1',
         frameRate: 30
       }
     }
@@ -152,8 +167,31 @@ let gameOverText = Text({
   opacity:0,
 });
 
+let waterAndSkyA = Sprite({
+  x: 0,
+  y: 0,
+  width: 512,
+  height: 256,
+  animations: backgroundSheet.animations,
+  dx: -0.75,
+  order: 0,
+});
+
+let waterAndSkyB = Sprite({
+  x: 512,
+  y: 0,
+  width: 512,
+  height: 256,
+  animations: backgroundSheet.animations,
+  dx: -0.75,
+  order: 1,
+});
+
+// Create an array of the sprites
+let waterAndSkySprites = [waterAndSkyA, waterAndSkyB];
+
 let obstacle = Sprite({
-  x: 256,
+  x: 512,
   y: 236,
   width: 20,
   height: 20,
@@ -162,16 +200,16 @@ let obstacle = Sprite({
 });
 
 let enemy = Sprite({
-  x: 512,
+  x: 768,
   y: ground,
   width: 32,
   height: 64,
-  animations: spriteSheet.animations,
+  animations: characterSheet.animations,
   dx: -3,
 });
 
 let arrow = Sprite({
-  x: 768,
+  x: 1024,
   y: 206,
   width: 50,
   height: 5,
@@ -188,7 +226,7 @@ let knight = Sprite({
   attacking: false,
   ducking: false,
   jumping: false,
-  animations: spriteSheet.animations
+  animations: characterSheet.animations
 });
 
 let sword = Sprite({
@@ -204,12 +242,12 @@ let sword = Sprite({
 let start = Scene({
   id: 'start',
   color: "pink",
-  objects: [knightGameText, pressStartText, highScoreMainText]
+  objects: [waterAndSkyA, waterAndSkyB, knightGameText, pressStartText, highScoreMainText]
 });
 
 let game = Scene({
   id: 'game',
-  objects: [knight, obstacle, enemy, arrow, sword, pointsText, gameOverText],
+  objects: [waterAndSkyA, waterAndSkyB, knight, obstacle, enemy, arrow, sword, pointsText, gameOverText],
 });
 
 let sprites = [obstacle, enemy, arrow];
@@ -217,11 +255,16 @@ let sprites = [obstacle, enemy, arrow];
 let loop = GameLoop({
   update: function () {
     if (activeScene == "menu"){
+      waterAndSkySprites.forEach((sprite, index) => {
+        if (sprite.x <= -512) {
+          sprite.x = Math.round(Math.max(...waterAndSkySprites.map(s => s.x)) + 510);
+        }
+      });
       if (keyPressed("enter")){
+        activeScene = "game"
         if (!gameOver){
           playSong();
         }
-        activeScene = "game"
       }
     }
     if (activeScene == "game")
@@ -323,6 +366,14 @@ let loop = GameLoop({
       }
     }
 
+    waterAndSkySprites.forEach((sprite, index) => {
+      sprite.dx = obstacle.dx / 5;
+      sprite.update();
+      if (sprite.x <= -512) {
+        sprite.x = Math.round(Math.max(...waterAndSkySprites.map(s => s.x)) + 500);
+      }
+    });
+
     if (gameOver){
       if (points > highScore) {
         highScore = points;
@@ -334,13 +385,14 @@ let loop = GameLoop({
       obstacle.dx = 0;
       enemy.dx = 0;
       gameOverText.opacity = 1;
-      bpm = 120;
+      bpm = 100;
       node.stop();
     }
 
     if (gameOver){
       if(keyPressed("enter")){
-        playSong();
+        bpm = 100;
+        if(!playingSong){playSong();}
         gameOver = false
         gameOverText.opacity = 0;
         knight.width = 32;
@@ -371,6 +423,7 @@ let loop = GameLoop({
   render: function () {
     if (activeScene == "menu") {
       start.render();
+      start.update();
     }
     else if (activeScene == "game"){
       game.render();
