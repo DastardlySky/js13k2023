@@ -6,11 +6,11 @@ context.imageSmoothingEnabled = false;
 
 let gameOver = false;
 
-let bpm = 120;
+let bpm = 100;
 let node = null;
 
 const playSong = () => {
-  let song = [[[,0,25,.002,.02,.08,3,,,,,,,,,.1,.01]],[[[,,13,,,,13,,,15,17,,13,,17,,20,,25,,,,25,,,24,25,,20,,17,,13,,18,,,,22,,,18,17,,20,,17,,13,,15,,,,20,,,22,20,,18,,17,,15,,]]],[0],bpm,{"title":"Scotland The Brave","instruments":["Poly Synth"],"patterns":["Pattern 0"]}]
+  let song = [[[,0,25,.002,.02,.08,3,,,,,,,,,.1,.01]],[[[,,13,,,,13,,,15,17,,13,,17,,20,,25,,,,25,,,24,25,,20,,17,,13,,18,,,,22,,,18,17,,20,,17,,13,,15,,,,20,,,22,20,,18,,17,,15,,]],[[,,13,,,,13,,,15,17,,13,,17,,20,,25,,,,25,,,24,25,,20,,17,,13,,18,,,,22,,,18,17,,20,,17,,13,,15,,,,13,,,12,13,,,,24,,,25]],[[,,27,,,,27,,,27,27,,24,,20,,,,25,,,,29,,,27,25,,22,,20,,,,25,,,,25,,,25,25,,,,25,,,24,22,,25,,24,,22,,20,,18,,17,,15,,]],[[,,13,,,,13,,,15,17,,13,,17,,20,,25,,,,25,,,24,25,,20,,17,,13,,18,,,,22,,,18,17,,20,,17,,13,,15,,,,13,,,12,13,,,,,,,,]]],[0,1,2,3],bpm,{"title":"Scotland The Brave","instruments":["Poly Synth"],"patterns":["Pattern 0","Pattern 1","Pattern 2","Pattern 3"]}]
   // Generate the sample data and play the song
   let buffer = zzfxM(...song);
   node = zzfxP(...buffer);
@@ -37,10 +37,11 @@ image.onload = function() {
 initKeys();
 
 let ground = 192;
+let gravity = 0.3;
 let points = 1;
 let highScore = localStorage.getItem("highScore") || 0;
 let multiplier = 0.0001;
-var AttackCooldown = 0;
+var AttackCooldown = 0;   
 var duckCooldown = 0;
 var activeScene = "menu"
 
@@ -119,8 +120,6 @@ let highScoreMainText = Sprite({
     drawPixelText(this.context, `High Score: ${Math.floor(highScore)}`, this.x, this.y, '16px Ariel', 50, 2);
   }
 });
-
-
 
 let pointsText = Text({
   text: points,
@@ -213,6 +212,8 @@ let game = Scene({
   objects: [knight, obstacle, enemy, arrow, sword, pointsText, gameOverText],
 });
 
+let sprites = [obstacle, enemy, arrow];
+
 let loop = GameLoop({
   update: function () {
     if (activeScene == "menu"){
@@ -221,7 +222,6 @@ let loop = GameLoop({
           playSong();
         }
         activeScene = "game"
-        node.loop = true;
       }
     }
     if (activeScene == "game")
@@ -244,16 +244,9 @@ let loop = GameLoop({
     multiplier += 0.00001;
     if (!gameOver){points = points + multiplier;}
     pointsText.text = Math.floor(points);
-
-    if (points > highScore) {
-      highScore = points;
-      localStorage.setItem("highScore", highScore);
-    }
-    
     //points system end
 
     //jumping start
-    let gravity = 0.3;
 
     //make knight fall
     knight.dy += gravity;
@@ -320,8 +313,6 @@ let loop = GameLoop({
       knight.ducking = false;
     }
 
-    let sprites = [obstacle, enemy, arrow];
-
     // check for a game over
     for (let sprite of sprites) {
       if (collides(knight, sprite)) {
@@ -333,6 +324,10 @@ let loop = GameLoop({
     }
 
     if (gameOver){
+      if (points > highScore) {
+        highScore = points;
+        localStorage.setItem("highScore", highScore);
+      }
       knight.y = 229;
       knight.width = 64;
       knight.height = 32;
