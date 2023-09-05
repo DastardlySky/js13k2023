@@ -99,9 +99,13 @@ function playSong() {
       default: {
         frames: '1..1',
         frameRate: 30
-      }
-    }
-  });
+      },
+      bridge: {
+        frames: '2..2',
+        frameRate: 30
+      },
+  },  
+});
 
 let knightGameText = Sprite({
   x: 135,
@@ -147,14 +151,14 @@ let pointsText = Text({
 });
 
 let gameOverText = Text({
-  text: "Game Over",
-  font: "50px Arial",
-  color: "black",
-  x: 256,
-  y: 128,
+  x: 30,
+  y: 5,
   anchor: { x: 0.5, y: 0.5 },
   textAlign: "center",
-  opacity:0,
+  opacity: 0,
+  render() {
+    drawPixelText(this.context, 'Game Over', this.x, this.y, '16px Ariel', 20, 5);
+  }
 });
 
 let waterAndSkyA = Sprite({
@@ -177,8 +181,29 @@ let waterAndSkyB = Sprite({
   order: 1,
 });
 
+let bridgeA = Sprite({
+  x: 0,
+  y: 0,
+  width: 512,
+  height: 256,
+  animations: backgroundSheet.animations,
+  dx: -0.75,
+  order: 0,
+});
+
+let bridgeB = Sprite({
+  x: 512,
+  y: 0,
+  width: 512,
+  height: 256,
+  animations: backgroundSheet.animations,
+  dx: -0.75,
+  order: 0,
+});
+
 // Create an array of the sprites
 let waterAndSkySprites = [waterAndSkyA, waterAndSkyB];
+let bridgeSprites = [bridgeA, bridgeB];
 
 let obstacle = Sprite({
   x: 512,
@@ -232,22 +257,27 @@ let sword = Sprite({
 let start = Scene({
   id: 'start',
   color: "pink",
-  objects: [waterAndSkyA, waterAndSkyB, knightGameText, pressStartText, highScoreMainText]
+  objects: [waterAndSkyA, waterAndSkyB, bridgeA, bridgeB, knightGameText, pressStartText, highScoreMainText]
 });
 
 let game = Scene({
   id: 'game',
-  objects: [waterAndSkyA, waterAndSkyB, knight, obstacle, enemy, arrow, sword, pointsText, gameOverText],
+  objects: [waterAndSkyA, waterAndSkyB, bridgeA, bridgeB, knight, obstacle, enemy, arrow, sword, pointsText, gameOverText],
 });
 
 let sprites = [obstacle, enemy, arrow];
 
 let loop = GameLoop({
   update: function () {
-
+    bridgeA.playAnimation('bridge');
+    bridgeB.playAnimation('bridge');
     if(waterAndSkyA.x <= -512){
       waterAndSkyA.x = 0;
       waterAndSkyB.x = 512;
+    }
+    if(bridgeA.x <= -512){
+      bridgeA.x = 0;
+      bridgeB.x = 512;
     }
 
     if (activeScene == "menu"){
@@ -357,8 +387,13 @@ let loop = GameLoop({
       }
     }
 
-    waterAndSkySprites.forEach((sprite, index) => {
+    waterAndSkySprites.forEach((sprite) => {
       sprite.dx = obstacle.dx / 5;
+      sprite.update();
+    });
+
+    bridgeSprites.forEach((sprite) => {
+      sprite.dx = obstacle.dx / 3;
       sprite.update();
     });
 
