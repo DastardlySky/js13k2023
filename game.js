@@ -104,6 +104,14 @@ function playSong() {
         frames: '2..2',
         frameRate: 30
       },
+      clouds1: {
+        frames: '3..3',
+        frameRate: 30
+      },
+      clouds2: {
+        frames: '4..4',
+        frameRate: 30
+      },
   },  
 });
 
@@ -201,9 +209,52 @@ let bridgeB = Sprite({
   order: 0,
 });
 
+let cloud1A = Sprite({
+  x: 0,
+  y: 0,
+  width: 512,
+  height: 256,
+  animations: backgroundSheet.animations,
+  dx: -0.75,
+  order: 0,
+});
+
+let cloud1B = Sprite({
+  x: 512,
+  y: 0,
+  width: 512,
+  height: 256,
+  animations: backgroundSheet.animations,
+  dx: -0.75,
+  order: 0,
+});
+
+let cloud2A = Sprite({
+  x: 0,
+  y: 0,
+  width: 512,
+  height: 256,
+  animations: backgroundSheet.animations,
+  dx: -0.75,
+  order: 0,
+});
+
+let cloud2B = Sprite({
+  x: 512,
+  y: 0,
+  width: 512,
+  height: 256,
+  animations: backgroundSheet.animations,
+  dx: -0.75,
+  order: 0,
+});
+
+
 // Create an array of the sprites
 let waterAndSkySprites = [waterAndSkyA, waterAndSkyB];
 let bridgeSprites = [bridgeA, bridgeB];
+let cloud1Sprites = [cloud1A, cloud1B];
+let cloud2Sprites = [cloud2A, cloud2B];
 
 let obstacle = Sprite({
   x: 512,
@@ -257,12 +308,12 @@ let sword = Sprite({
 let start = Scene({
   id: 'start',
   color: "pink",
-  objects: [waterAndSkyA, waterAndSkyB, bridgeA, bridgeB, knightGameText, pressStartText, highScoreMainText]
+  objects: [waterAndSkyA, waterAndSkyB, cloud2A, cloud2B, cloud1A, cloud1B, bridgeA, bridgeB, knightGameText, pressStartText, highScoreMainText]
 });
 
 let game = Scene({
   id: 'game',
-  objects: [waterAndSkyA, waterAndSkyB, bridgeA, bridgeB, knight, obstacle, enemy, arrow, sword, pointsText, gameOverText],
+  objects: [waterAndSkyA, waterAndSkyB, cloud2A, cloud2B, cloud1A, cloud1B, bridgeA, bridgeB, knight, obstacle, enemy, arrow, sword, pointsText, gameOverText],
 });
 
 let sprites = [obstacle, enemy, arrow];
@@ -271,6 +322,10 @@ let loop = GameLoop({
   update: function () {
     bridgeA.playAnimation('bridge');
     bridgeB.playAnimation('bridge');
+    cloud1A.playAnimation('clouds1');
+    cloud1B.playAnimation('clouds1');
+    cloud2A.playAnimation('clouds2');
+    cloud2B.playAnimation('clouds2');
     if(waterAndSkyA.x <= -512){
       waterAndSkyA.x = 0;
       waterAndSkyB.x = 512;
@@ -279,6 +334,15 @@ let loop = GameLoop({
       bridgeA.x = 0;
       bridgeB.x = 512;
     }
+    if(cloud1A.x <= -512){
+      cloud1A.x = 0;
+      cloud1B.x = 512;
+    }
+    if(cloud2A.x <= -512){
+      cloud2A.x = 0;
+      cloud2B.x = 512;
+    }
+
 
     if (activeScene == "menu"){
       if (keyPressed("enter")){
@@ -394,6 +458,16 @@ let loop = GameLoop({
 
     bridgeSprites.forEach((sprite) => {
       sprite.dx = obstacle.dx / 3;
+      sprite.update();
+    });
+
+    cloud1Sprites.forEach((sprite) => {
+      sprite.dx = obstacle.dx / 6;
+      sprite.update();
+    });
+
+    cloud2Sprites.forEach((sprite) => {
+      sprite.dx = obstacle.dx / 5;
       sprite.update();
     });
 
