@@ -244,12 +244,13 @@ let sprites = [obstacle, enemy, arrow];
 
 let loop = GameLoop({
   update: function () {
+
+    if(waterAndSkyA.x <= -512){
+      waterAndSkyA.x = 0;
+      waterAndSkyB.x = 512;
+    }
+
     if (activeScene == "menu"){
-      waterAndSkySprites.forEach((sprite, index) => {
-        if (sprite.x <= -512) {
-          sprite.x = Math.round(Math.max(...waterAndSkySprites.map(s => s.x)) + 510);
-        }
-      });
       if (keyPressed("enter")){
         activeScene = "game"
         if (!gameOver){
@@ -359,9 +360,6 @@ let loop = GameLoop({
     waterAndSkySprites.forEach((sprite, index) => {
       sprite.dx = obstacle.dx / 5;
       sprite.update();
-      if (sprite.x <= -512) {
-        sprite.x = Math.round(Math.max(...waterAndSkySprites.map(s => s.x)) + 500);
-      }
     });
 
     if (gameOver){
