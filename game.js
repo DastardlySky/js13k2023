@@ -146,16 +146,6 @@ let pointsText = Text({
   textAlign: "center",
 });
 
-let highScoreText = Text({
-  text: `High Score: ${Math.floor(highScore)}`,
-  font: "20px Arial",
-  color: "black",
-  x: 256,
-  y: 128,
-  anchor: { x: 0.5, y: 0.5 },
-  textAlign: "center",
-});
-
 let gameOverText = Text({
   text: "Game Over",
   font: "50px Arial",
