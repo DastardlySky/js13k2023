@@ -477,7 +477,7 @@ let loop = GameLoop({
     });
 
     bridgeSprites.forEach((sprite) => {
-      sprite.dx = obstacle.dx / 3;
+      sprite.dx = obstacle.dx * 0.75;
       sprite.update();
     });
 
