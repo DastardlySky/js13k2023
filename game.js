@@ -218,7 +218,7 @@ let cloud1A = Sprite({
   width: 512,
   height: 256,
   animations: backgroundSheet.animations,
-  dx: -0.75,
+  dx: -1,
   order: 0,
 });
 
@@ -228,7 +228,7 @@ let cloud1B = Sprite({
   width: 512,
   height: 256,
   animations: backgroundSheet.animations,
-  dx: -0.75,
+  dx: -1,
   order: 0,
 });
 
@@ -482,12 +482,12 @@ let loop = GameLoop({
     });
 
     cloud1Sprites.forEach((sprite) => {
-      sprite.dx = obstacle.dx / 6;
+      sprite.dx = obstacle.dx / 5;
       sprite.update();
     });
 
     cloud2Sprites.forEach((sprite) => {
-      sprite.dx = obstacle.dx / 5;
+      sprite.dx = obstacle.dx / 6;
       sprite.update();
     });
 
