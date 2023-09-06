@@ -153,7 +153,7 @@ let highScoreMainText = Sprite({
 });
 
 let pointsText = Text({
-  x: 7,
+  x: 240,
   y: 1,
   anchor: { x: 0.5, y: 0.5 },
   render() {
