@@ -87,6 +87,10 @@ function playSong() {
       enemyWalk: {
         frames: '0..0',
         frameRate: 30
+      },
+      skellyWalk: {
+        frames: '2..2',
+        frameRate: 30
       }
     }
   });
@@ -248,7 +252,6 @@ let cloud2B = Sprite({
   order: 0,
 });
 
-
 // Create an array of the sprites
 let waterAndSkySprites = [waterAndSkyA, waterAndSkyB];
 let bridgeSprites = [bridgeA, bridgeB];
@@ -261,6 +264,15 @@ let obstacle = Sprite({
   width: 20,
   height: 20,
   color: "blue",
+  dx: -3,
+});
+
+let skelly = Sprite({
+  x: 1300,
+  y: ground,
+  width: 32,
+  height: 64,
+  animations: characterSheet.animations,
   dx: -3,
 });
 
@@ -312,10 +324,10 @@ let start = Scene({
 
 let game = Scene({
   id: 'game',
-  objects: [waterAndSkyA, waterAndSkyB, cloud2A, cloud2B, cloud1A, cloud1B, bridgeA, bridgeB, knight, obstacle, enemy, arrow, sword, pointsText, gameOverText],
+  objects: [waterAndSkyA, waterAndSkyB, cloud2A, cloud2B, cloud1A, cloud1B, bridgeA, bridgeB, knight, obstacle, enemy, skelly, arrow, sword, pointsText, gameOverText],
 });
 
-let sprites = [obstacle, enemy, arrow];
+let sprites = [obstacle, enemy, skelly, arrow];
 
 let loop = GameLoop({
   update: function () {
@@ -353,6 +365,7 @@ let loop = GameLoop({
     }
     if (activeScene == "game")
     {
+
     knight.update();
     knight.playAnimation('knightWalk');
     obstacle.update();
@@ -360,10 +373,13 @@ let loop = GameLoop({
     enemy.playAnimation('enemyWalk');
     arrow.update();
     sword.update();
+    skelly.playAnimation('skellyWalk');
+    skelly.update();
 
     if (obstacle.dx >= -13 && !gameOver) {
       obstacle.dx *= 1.0001;
       enemy.dx *= 1.0001;
+      skelly.dx *= 1.0001;
       arrow.dx *= 1.0001;
     }
 
@@ -408,8 +424,13 @@ let loop = GameLoop({
     if (sword.opacity == 1) {
       // check for collisions
       if (collides(sword, enemy)) {
-        enemy.y = -100;
+        enemy.x = -50;
       }
+
+      if (collides(sword, skelly)) {
+        skelly.x = -50;
+      }
+
       AttackCooldown -= 1;
       sword.x += 1;
     }
@@ -480,6 +501,7 @@ let loop = GameLoop({
       knight.height = 32;
       obstacle.dx = 0;
       enemy.dx = 0;
+      skelly.dx = 0;
       gameOverText.opacity = 1;
       bpm = 100;
       node.stop();
@@ -497,17 +519,33 @@ let loop = GameLoop({
         obstacle.x = 256;
         obstacle.dx = -3
         enemy.x = 512;
-        enemy.dx = -3
+        enemy.dx = -3;
+        skelly.x = 1200;
+        skelly.dx = -3;
         arrow.x = 768;
         arrow.dx = -3
       }
     }
     // end
 
+    // refactor this?
+    function isCloseToOtherSprites(newSpriteX, currentSprite, sprites) {
+      for (let sprite of sprites) {
+        if (sprite !== currentSprite && Math.abs(sprite.x - newSpriteX) < 300) {
+          return true;
+        }
+      }
+      return false;
+    }
+
     for (let sprite of sprites) {
       if (sprite.x <= -50) {
-        sprite.x = 768;
-        enemy.y = ground;
+        let newSpriteX;
+        do {
+          newSpriteX = Math.floor(Math.random() * 2048) + 512;
+        } while (isCloseToOtherSprites(newSpriteX, sprite, sprites) == true);
+
+        sprite.x = newSpriteX;
       }
     }
 
