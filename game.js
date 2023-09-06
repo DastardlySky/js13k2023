@@ -16,7 +16,7 @@ image.onload = function() {
 
 initKeys();
 
-let ground = 192;
+let ground = 131;
 let gravity = 0.3;
 let points = 0;
 let highScore = localStorage.getItem("highScore") || 0;
@@ -119,9 +119,9 @@ function playSong() {
   },  
 });
 
-let knightGameText = Sprite({
+let knightGameText = Text({
   x: 135,
-  y: 80,
+  y: 20,
   width: 512,
   height: 256,
   anchor: { x: 0.5, y: 0.5 },
@@ -130,9 +130,9 @@ let knightGameText = Sprite({
   }
 });
 
-let pressStartText = Sprite({
+let pressStartText = Text({
   x: 189,
-  y: 110,
+  y: 50,
   width: 512,
   height: 256,
   anchor: { x: 0.5, y: 0.5 },
@@ -153,7 +153,7 @@ let highScoreMainText = Sprite({
 });
 
 let pointsText = Text({
-  x: 240,
+  x: 7,
   y: 1,
   anchor: { x: 0.5, y: 0.5 },
   render() {
@@ -272,7 +272,7 @@ let cloud2Sprites = [cloud2A, cloud2B];
 
 let obstacle = Sprite({
   x: 512,
-  y: 236,
+  y: ground + 44,
   width: 20,
   height: 20,
   color: "blue",
@@ -299,7 +299,7 @@ let enemy = Sprite({
 
 let arrow = Sprite({
   x: 1024,
-  y: 206,
+  y: ground + 15,
   width: 50,
   height: 5,
   color: "black",
@@ -465,7 +465,7 @@ let loop = GameLoop({
       knight.ducking = true;
       duckCooldown = 60;
       knight.height = 30;
-      knight.y = 226;
+      knight.y = 165;
       duckCooldown -= 1
     }
     else{
