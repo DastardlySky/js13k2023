@@ -172,6 +172,18 @@ let gameOverText = Text({
   }
 });
 
+let pressRestartText = Sprite({
+  x: 185,
+  y: 115,
+  width: 512,
+  height: 256,
+  anchor: { x: 0.5, y: 0.5 },
+  opacity: 0,
+  render() {
+    drawPixelText(this.context, 'Press Enter to Restart', this.x, this.y, '16px Ariel', 50, 2);
+  }
+});
+
 let waterAndSkyA = Sprite({
   x: 0,
   y: 0,
@@ -324,7 +336,7 @@ let start = Scene({
 
 let game = Scene({
   id: 'game',
-  objects: [waterAndSkyA, waterAndSkyB, cloud2A, cloud2B, cloud1A, cloud1B, bridgeA, bridgeB, knight, obstacle, enemy, skelly, arrow, sword, pointsText, gameOverText],
+  objects: [waterAndSkyA, waterAndSkyB, cloud2A, cloud2B, cloud1A, cloud1B, bridgeA, bridgeB, knight, obstacle, enemy, skelly, arrow, sword, pointsText, gameOverText, pressRestartText],
 });
 
 let sprites = [obstacle, enemy, skelly, arrow];
@@ -503,6 +515,7 @@ let loop = GameLoop({
       enemy.dx = 0;
       skelly.dx = 0;
       gameOverText.opacity = 1;
+      pressRestartText.opacity = 1;
       bpm = 100;
       node.stop();
     }
@@ -513,6 +526,7 @@ let loop = GameLoop({
         if(!playingSong){playSong();}
         gameOver = false
         gameOverText.opacity = 0;
+        pressRestartText.opacity = 0;
         knight.width = 32;
         points = 0;
         multiplier = 0.0001;
