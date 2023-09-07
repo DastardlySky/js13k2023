@@ -121,23 +121,23 @@ function playSong() {
 
 let knightGameText = Text({
   x: 135,
-  y: 20,
+  y: -4,
   width: 512,
   height: 256,
   anchor: { x: 0.5, y: 0.5 },
   render() {
-    drawPixelText(this.context, 'FREEEDOOOM!!!!!!!', this.x, this.y, '20px Ariel', 10, 3);
+    drawPixelText(this.context, 'FREEEDOOOM!!!!!!!', this.x, this.y, '18px Ariel', 10, 3);
   }
 });
 
 let pressStartText = Text({
-  x: 189,
-  y: 50,
+  x: 220,
+  y: 25,
   width: 512,
   height: 256,
   anchor: { x: 0.5, y: 0.5 },
   render() {
-    drawPixelText(this.context, 'Press Enter to Start', this.x, this.y, '16px Ariel', 50, 2);
+    drawPixelText(this.context, 'Press Enter', this.x, this.y, '14px Ariel', 50, 2);
   }
 });
 
@@ -148,7 +148,7 @@ let highScoreMainText = Sprite({
   height: 256,
   anchor: { x: 0, y: 0.5 },
   render() {
-    drawPixelText(this.context, `High Score: ${Math.floor(highScore)}`, this.x, this.y, '16px Ariel', 50, 2);
+    drawPixelText(this.context, `High Score: ${Math.floor(highScore)}`, this.x, this.y, '12px Ariel', 50, 2);
   }
 });
 
@@ -158,6 +158,42 @@ let pointsText = Text({
   anchor: { x: 0.5, y: 0.5 },
   render() {
     drawPixelText(this.context, `${Math.floor(points)}`, this.x, this.y, '16px Ariel', 50, 2);
+  }
+});
+
+let controlsText = Text({
+  x: 100,
+  y: 40,
+  anchor: { x: 0.5, y: 0.5 },
+  render() {
+    drawPixelText(this.context, 'controls:', this.x, this.y, '14px Ariel', 50, 2);
+  }
+});
+
+let jumpText = Text({
+  x: 87,
+  y: 52,
+  anchor: { x: 0.5, y: 0.5 },
+  render() {
+    drawPixelText(this.context, '⬆ or w: jump', this.x, this.y, '14px Ariel', 50, 2);
+  }
+});
+
+let duckText = Text({
+  x: 87,
+  y: 66,
+  anchor: { x: 0.5, y: 0.5 },
+  render() {
+    drawPixelText(this.context, '⬇ or s: duck', this.x, this.y, '14px Ariel', 50, 2);
+  }
+});
+
+let spaceText = Text({
+  x: 87,
+  y: 78,
+  anchor: { x: 0.5, y: 0.5 },
+  render() {
+    drawPixelText(this.context, 'space: attack', this.x, this.y, '14px Ariel', 50, 2);
   }
 });
 
@@ -331,12 +367,12 @@ let sword = Sprite({
 let start = Scene({
   id: 'start',
   color: "pink",
-  objects: [waterAndSkyA, waterAndSkyB, cloud2A, cloud2B, cloud1A, cloud1B, bridgeA, bridgeB, knightGameText, pressStartText, highScoreMainText]
+  objects: [waterAndSkyA, waterAndSkyB, cloud2A, cloud2B, cloud1A, cloud1B, bridgeA, bridgeB, knightGameText, pressStartText, highScoreMainText, controlsText, jumpText, duckText, spaceText]
 });
 
 let game = Scene({
   id: 'game',
-  objects: [waterAndSkyA, waterAndSkyB, cloud2A, cloud2B, cloud1A, cloud1B, bridgeA, bridgeB, knight, obstacle, enemy, skelly, arrow, sword, pointsText, gameOverText, pressRestartText],
+  objects: [waterAndSkyA, waterAndSkyB, cloud2A, cloud2B, cloud1A, cloud1B, bridgeA, bridgeB, knight, obstacle, enemy, skelly, arrow, sword, pointsText,  gameOverText, pressRestartText],
 });
 
 let sprites = [obstacle, enemy, skelly, arrow];
@@ -377,7 +413,6 @@ let loop = GameLoop({
     }
     if (activeScene == "game")
     {
-
     knight.update();
     knight.playAnimation('knightWalk');
     obstacle.update();
