@@ -448,7 +448,7 @@ let loop = GameLoop({
     }
 
     //if on ground, make knight jump up
-    if ((keyPressed("arrowup") || keyPressed("space")) && knight.ducking == false && !gameOver) {
+    if ((keyPressed("arrowup") || keyPressed("w")) && knight.ducking == false && !gameOver) {
       if (knight.y >= ground) {
         if(knight.attacking == false && knight.ducking == false){
         zzfx(...[,,69,.01,.02,.14,1,1.42,8.3,,,,,.1,,,,.7,.09]); // jump
@@ -460,7 +460,7 @@ let loop = GameLoop({
     //jumping end
 
     // attack start
-    if ((keyPressed("arrowright")) && (AttackCooldown == 0) && (knight.ducking == false) && knight.y >= ground && !gameOver) {
+    if ((keyPressed("space")) && (AttackCooldown == 0) && (knight.ducking == false) && knight.y >= ground && !gameOver) {
       // show sword
       zzfx(...[1.07,,1260,.02,.07,,1,1.61,5.7,1.8,,,,,5,,,.75]); // hit
       sword.opacity = 1;
@@ -493,7 +493,7 @@ let loop = GameLoop({
     // attack end
 
     //duck start
-    if (keyPressed("arrowdown") && knight.jumping == false && !gameOver){
+    if ((keyPressed("arrowdown") || keyPressed('s')) && knight.jumping == false && !gameOver){
       if (knight.ducking == false){
       zzfx(...[,,-5,.03,.02,.08,1,.19,1.6,1.1,200,,,,2,,,.67,.02]); // duck
       }
