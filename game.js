@@ -3,6 +3,7 @@ import { init, Sprite, SpriteSheet, Scene, GameLoop, initKeys, keyPressed, Text,
 
 let { canvas, context } = init();
 context.imageSmoothingEnabled = false;
+let offscreenCanvas = document.createElement('canvas');
 
 let gameOver = false;
 let bpm = 100;
@@ -51,7 +52,6 @@ function playSong() {
 
   // Custom function to draw pixel art text
   function drawPixelText(context, text, x, y, font, threshold, scalingFactor) {
-    let offscreenCanvas = document.createElement('canvas');
     offscreenCanvas.width = 250;
     offscreenCanvas.height = 32;
     let d = offscreenCanvas.getContext('2d');
