@@ -166,16 +166,16 @@ let controlsText = Text({
   y: 40,
   anchor: { x: 0.5, y: 0.5 },
   render() {
-    drawPixelText(this.context, 'controls:', this.x, this.y, '14px Ariel', 50, 2);
+    drawPixelText(this.context, 'Controls:', this.x, this.y, '14px Ariel', 50, 2);
   }
 });
 
 let jumpText = Text({
-  x: 87,
+  x: 83,
   y: 52,
   anchor: { x: 0.5, y: 0.5 },
   render() {
-    drawPixelText(this.context, '⬆ or w: jump', this.x, this.y, '14px Ariel', 50, 2);
+    drawPixelText(this.context, ' Jump:  W / ⬆', this.x, this.y, '14px Ariel', 50, 2);
   }
 });
 
@@ -184,16 +184,16 @@ let duckText = Text({
   y: 66,
   anchor: { x: 0.5, y: 0.5 },
   render() {
-    drawPixelText(this.context, '⬇ or s: duck', this.x, this.y, '14px Ariel', 50, 2);
+    drawPixelText(this.context, 'Duck:   S / ⬇', this.x, this.y, '14px Ariel', 50, 2);
   }
 });
 
 let spaceText = Text({
-  x: 87,
+  x: 86,
   y: 78,
   anchor: { x: 0.5, y: 0.5 },
   render() {
-    drawPixelText(this.context, 'space: attack', this.x, this.y, '14px Ariel', 50, 2);
+    drawPixelText(this.context, 'Attack: Space', this.x, this.y, '14px Ariel', 50, 2);
   }
 });
 
