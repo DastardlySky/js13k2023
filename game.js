@@ -50,30 +50,46 @@ function playSong() {
   };
 };
 
-  // Custom function to draw pixel art text
-  function drawPixelText(context, text, x, y, font, threshold, scalingFactor) {
-    offscreenCanvas.width = 250;
-    offscreenCanvas.height = 32;
-    let d = offscreenCanvas.getContext('2d');
+let time = 0;
 
-    d.font = font;
-    d.textBaseline = "middle";
-    d.fillText(text, 0, 16);
+// Custom function to draw pixel art text
+function drawPixelText(context, text, x, y, font, threshold, scalingFactor, wiggle) {
+  const canvasWidth = 250;
+  const canvasHeight = 32;
+  offscreenCanvas.width = canvasWidth;
+  offscreenCanvas.height = canvasHeight;
+  let d = offscreenCanvas.getContext('2d');
+  time +=0.01
 
-    let I = d.getImageData(0, 0, 250, 32);
+  d.font = font;
+  d.textBaseline = "middle";
+  d.fillText(text, 0, 16);
 
-    for(let i = 0; i < 250; i++) {
-      for(let j = 0; j < 32; j++) {
-        if(
-          I.data[(j * 250 + i) * 4 + 1] > threshold ||
-          I.data[(j * 250 + i) * 4 + 2] > threshold ||
-          I.data[(j * 250 + i) * 4 + 3] > threshold
-        ) {
-          context.fillRect(x + i * scalingFactor, y + j * scalingFactor, scalingFactor, scalingFactor);
+  let I = d.getImageData(0, 0, canvasWidth, canvasHeight);
+
+  // Set fill style
+  context.fillStyle = 'darkblue';
+
+  let offsetY = 0; // Initialize the offsetY variable outside the loop
+
+  for (let i = 0; i < canvasWidth; i++) {
+    for (let j = 0; j < canvasHeight; j++) {
+      if (
+        I.data[(j * canvasWidth + i) * 4 + 1] > threshold ||
+        I.data[(j * canvasWidth + i) * 4 + 2] > threshold ||
+        I.data[(j * canvasWidth + i) * 4 + 3] > threshold
+      ) {
+        if (wiggle) {
+          // Only calculate offsetY if wiggle is true
+          offsetY = Math.sin(time + i * 0.06) * 5;
         }
+        // Draw the pixel with the potentially modified offsetY
+        context.fillRect(x + i * scalingFactor, y + j * scalingFactor + offsetY, scalingFactor, scalingFactor);
       }
     }
   }
+
+}
 
   let characterSheet = SpriteSheet({
     image: image,
@@ -126,7 +142,7 @@ let knightGameText = Text({
   height: 256,
   anchor: { x: 0.5, y: 0.5 },
   render() {
-    drawPixelText(this.context, 'FREEEDOOOM!!!!!!!', this.x, this.y, '18px Ariel', 10, 3);
+    drawPixelText(this.context, 'FREEEDOOOM!!!!!!!', this.x, this.y, '18px Ariel', 10, 3, true);
   }
 });
 
@@ -137,7 +153,7 @@ let pressStartText = Text({
   height: 256,
   anchor: { x: 0.5, y: 0.5 },
   render() {
-    drawPixelText(this.context, 'Press Enter', this.x, this.y, '14px Ariel', 50, 2);
+    drawPixelText(this.context, 'Press Enter', this.x, this.y, '14px Ariel', 50, 2, false);
   }
 });
 
@@ -148,7 +164,7 @@ let highScoreMainText = Sprite({
   height: 256,
   anchor: { x: 0, y: 0.5 },
   render() {
-    drawPixelText(this.context, `High Score: ${Math.floor(highScore)}`, this.x, this.y, '12px Ariel', 50, 2);
+    drawPixelText(this.context, `High Score: ${Math.floor(highScore)}`, this.x, this.y, '12px Ariel', 50, 2, false);
   }
 });
 
@@ -157,7 +173,7 @@ let pointsText = Text({
   y: 1,
   anchor: { x: 0.5, y: 0.5 },
   render() {
-    drawPixelText(this.context, `${Math.floor(points)}`, this.x, this.y, '16px Ariel', 50, 2);
+    drawPixelText(this.context, `${Math.floor(points)}`, this.x, this.y, '16px Ariel', 50, 2, false);
   }
 });
 
@@ -166,7 +182,7 @@ let controlsText = Text({
   y: 40,
   anchor: { x: 0.5, y: 0.5 },
   render() {
-    drawPixelText(this.context, 'Controls:', this.x, this.y, '14px Ariel', 50, 2);
+    drawPixelText(this.context, 'Controls:', this.x, this.y, '14px Ariel', 50, 2, false);
   }
 });
 
@@ -175,7 +191,7 @@ let jumpText = Text({
   y: 52,
   anchor: { x: 0.5, y: 0.5 },
   render() {
-    drawPixelText(this.context, ' Jump:  W / ⬆', this.x, this.y, '14px Ariel', 50, 2);
+    drawPixelText(this.context, ' Jump:  W / ⬆', this.x, this.y, '14px Ariel', 50, 2, false);
   }
 });
 
@@ -184,7 +200,7 @@ let duckText = Text({
   y: 66,
   anchor: { x: 0.5, y: 0.5 },
   render() {
-    drawPixelText(this.context, 'Duck:   S / ⬇', this.x, this.y, '14px Ariel', 50, 2);
+    drawPixelText(this.context, 'Duck:   S / ⬇', this.x, this.y, '14px Ariel', 50, 2, false);
   }
 });
 
@@ -193,7 +209,7 @@ let spaceText = Text({
   y: 78,
   anchor: { x: 0.5, y: 0.5 },
   render() {
-    drawPixelText(this.context, 'Attack: Space', this.x, this.y, '14px Ariel', 50, 2);
+    drawPixelText(this.context, 'Attack: Space', this.x, this.y, '14px Ariel', 50, 2, false);
   }
 });
 
@@ -204,7 +220,7 @@ let gameOverText = Text({
   textAlign: "center",
   opacity: 0,
   render() {
-    drawPixelText(this.context, 'Game Over', this.x, this.y, '16px Ariel', 20, 5);
+    drawPixelText(this.context, 'Game Over', this.x, this.y, '16px Ariel', 20, 5, false);
   }
 });
 
@@ -216,7 +232,7 @@ let pressRestartText = Sprite({
   anchor: { x: 0.5, y: 0.5 },
   opacity: 0,
   render() {
-    drawPixelText(this.context, 'Press Enter to Restart', this.x, this.y, '16px Ariel', 50, 2);
+    drawPixelText(this.context, 'Press Enter to Restart', this.x, this.y, '16px Ariel', 50, 2, false);
   }
 });
 
