@@ -69,6 +69,8 @@ function drawPixelText(context, text, x, y, font, threshold, scalingFactor, wigg
 
   // Set fill style
   context.fillStyle = 'darkblue';
+  context.strokeStyle = 'pink';
+  context.lineWidth = 1;
 
   let offsetY = 0; // Initialize the offsetY variable outside the loop
 
@@ -85,6 +87,7 @@ function drawPixelText(context, text, x, y, font, threshold, scalingFactor, wigg
         }
         // Draw the pixel with the potentially modified offsetY
         context.fillRect(x + i * scalingFactor, y + j * scalingFactor + offsetY, scalingFactor, scalingFactor);
+        
       }
     }
   }
@@ -136,24 +139,24 @@ function drawPixelText(context, text, x, y, font, threshold, scalingFactor, wigg
 });
 
 let knightGameText = Text({
-  x: 135,
+  x: 165,
   y: -4,
   width: 512,
   height: 256,
   anchor: { x: 0.5, y: 0.5 },
   render() {
-    drawPixelText(this.context, 'FREEEDOOOM!!!!!!!', this.x, this.y, '18px Ariel', 10, 3, true);
+    drawPixelText(this.context, 'FREEEDOOOM!!!!!!!', this.x, this.y, '14px  Calibri', 13, 3, true);
   }
 });
 
 let pressStartText = Text({
-  x: 220,
+  x: 213,
   y: 25,
   width: 512,
   height: 256,
   anchor: { x: 0.5, y: 0.5 },
   render() {
-    drawPixelText(this.context, 'Press Enter', this.x, this.y, '14px Ariel', 50, 2, false);
+    drawPixelText(this.context, 'PRESS ENTER', this.x, this.y, '14px Calibri', 13, 2, false);
   }
 });
 
@@ -164,7 +167,7 @@ let highScoreMainText = Sprite({
   height: 256,
   anchor: { x: 0, y: 0.5 },
   render() {
-    drawPixelText(this.context, `High Score: ${Math.floor(highScore)}`, this.x, this.y, '12px Ariel', 50, 2, false);
+    drawPixelText(this.context, `HIGH SCORE: ${Math.floor(highScore)}`, this.x, this.y, '14px Calibri', 13, 2, false);
   }
 });
 
@@ -173,66 +176,66 @@ let pointsText = Text({
   y: 1,
   anchor: { x: 0.5, y: 0.5 },
   render() {
-    drawPixelText(this.context, `${Math.floor(points)}`, this.x, this.y, '16px Ariel', 50, 2, false);
+    drawPixelText(this.context, `${Math.floor(points)}`, this.x, this.y, '14px Calibri', 13, 2, false);
   }
 });
 
 let controlsText = Text({
-  x: 100,
+  x: 95,
   y: 40,
   anchor: { x: 0.5, y: 0.5 },
   render() {
-    drawPixelText(this.context, 'Controls:', this.x, this.y, '14px Ariel', 50, 2, false);
+    drawPixelText(this.context, 'CONTROLS:', this.x, this.y, '12px Calibri', 13, 2, false);
   }
 });
 
 let jumpText = Text({
-  x: 83,
+  x: 89,
   y: 52,
   anchor: { x: 0.5, y: 0.5 },
   render() {
-    drawPixelText(this.context, ' Jump:  W / ⬆', this.x, this.y, '14px Ariel', 50, 2, false);
+    drawPixelText(this.context, ' JUMP:  W / ⬆', this.x, this.y, '12px Calibri', 13, 2, false);
   }
 });
 
 let duckText = Text({
-  x: 87,
+  x: 93,
   y: 66,
   anchor: { x: 0.5, y: 0.5 },
   render() {
-    drawPixelText(this.context, 'Duck:   S / ⬇', this.x, this.y, '14px Ariel', 50, 2, false);
+    drawPixelText(this.context, 'DUCK:   S / ⬇', this.x, this.y, '12px Calibri', 13, 2, false);
   }
 });
 
 let spaceText = Text({
-  x: 86,
+  x: 89,
   y: 78,
   anchor: { x: 0.5, y: 0.5 },
   render() {
-    drawPixelText(this.context, 'Attack: Space', this.x, this.y, '14px Ariel', 50, 2, false);
+    drawPixelText(this.context, 'ATTACK: Space', this.x, this.y, '12px Calibri', 13, 2, false);
   }
 });
 
 let gameOverText = Text({
-  x: 30,
+  x: 36,
   y: 5,
   anchor: { x: 0.5, y: 0.5 },
   textAlign: "center",
   opacity: 0,
   render() {
-    drawPixelText(this.context, 'Game Over', this.x, this.y, '16px Ariel', 20, 5, false);
+    drawPixelText(this.context, 'GAME OVER', this.x, this.y, '14px Calibri', 13, 5, false);
   }
 });
 
 let pressRestartText = Sprite({
-  x: 185,
+  x: 180,
   y: 115,
   width: 512,
   height: 256,
   anchor: { x: 0.5, y: 0.5 },
   opacity: 0,
   render() {
-    drawPixelText(this.context, 'Press Enter to Restart', this.x, this.y, '16px Ariel', 50, 2, false);
+    drawPixelText(this.context, 'PRESS ENTER TO RESTART', this.x, this.y, '14px Calibri', 13, 2, false);
   }
 });
 
