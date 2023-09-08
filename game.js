@@ -155,6 +155,7 @@ let pressStartText = Text({
   width: 512,
   height: 256,
   anchor: { x: 0.5, y: 0.5 },
+  counter: 0,
   render() {
     drawPixelText(this.context, 'PRESS ENTER', this.x, this.y, '14px Calibri', 13, 2, false);
   }
@@ -423,6 +424,10 @@ let loop = GameLoop({
 
 
     if (activeScene == "menu"){
+      pressStartText.counter++;
+      if (pressStartText.counter % 30 === 0) {
+        pressStartText.opacity = pressStartText.opacity === 1 ? 0 : 1;
+      }
       if (keyPressed("enter")){
         activeScene = "game"
         if (!gameOver){
