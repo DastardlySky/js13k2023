@@ -235,6 +235,7 @@ let pressRestartText = Sprite({
   height: 256,
   anchor: { x: 0.5, y: 0.5 },
   opacity: 0,
+  counter: 0,
   render() {
     drawPixelText(this.context, 'PRESS ENTER TO RESTART', this.x, this.y, '14px Calibri', 13, 2, false);
   }
@@ -574,7 +575,9 @@ let loop = GameLoop({
       enemy.dx = 0;
       skelly.dx = 0;
       gameOverText.opacity = 1;
-      pressRestartText.opacity = 1;
+      if (pressRestartText.counter % 30 === 0) {
+        pressRestartText.opacity = pressRestartText.opacity === 1 ? 0 : 1;
+      }
       bpm = 100;
       node.stop();
     }
