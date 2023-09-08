@@ -438,6 +438,7 @@ let loop = GameLoop({
     }
     if (activeScene == "game")
     {
+    pressRestartText.counter ++;
     knight.update();
     knight.playAnimation('knightWalk');
     obstacle.update();
