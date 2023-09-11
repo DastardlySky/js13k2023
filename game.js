@@ -114,6 +114,42 @@ function drawPixelText(context, text, x, y, font, threshold, scalingFactor, wigg
     }
   });
 
+  let layingSheet = SpriteSheet({
+    image: image,
+    frameWidth: 64,
+    frameHeight: 32,
+    animations: {
+      laying: {
+        frames: '1..1',
+        frameRate: 1
+      },
+    }
+  });
+
+  let arrowSheet = SpriteSheet({
+    image: image,
+    frameWidth: 32,
+    frameHeight: 8,
+    animations: {
+      arrow: {
+        frames: '4..4',
+        frameRate: 1
+      },
+    }
+  });
+
+  let obstacleSheet = SpriteSheet({
+    image: image,
+    frameWidth: 16,
+    frameHeight: 16,
+    animations: {
+      rock: {
+        frames: '3..3',
+        frameRate: 1
+      },
+    }
+  });
+
   let backgroundSheet = SpriteSheet({
     image: image,
     frameWidth: 512,
@@ -121,19 +157,19 @@ function drawPixelText(context, text, x, y, font, threshold, scalingFactor, wigg
     animations: {
       default: {
         frames: '1..1',
-        frameRate: 30
+        frameRate: 1
       },
       bridge: {
         frames: '2..2',
-        frameRate: 30
+        frameRate: 1
       },
       clouds1: {
         frames: '3..3',
-        frameRate: 30
+        frameRate: 1
       },
       clouds2: {
         frames: '4..4',
-        frameRate: 30
+        frameRate: 1
       },
   },  
 });
@@ -327,12 +363,12 @@ let bridgeSprites = [bridgeA, bridgeB];
 let cloud1Sprites = [cloud1A, cloud1B];
 let cloud2Sprites = [cloud2A, cloud2B];
 
-let obstacle = Sprite({
+let rock = Sprite({
   x: 512,
-  y: ground + 44,
-  width: 20,
-  height: 20,
-  color: "blue",
+  y: ground + 48,
+  width: 16,
+  height: 16,
+  animations: obstacleSheet.animations,
   dx: -3,
 });
 
@@ -357,9 +393,9 @@ let enemy = Sprite({
 let arrow = Sprite({
   x: 1024,
   y: ground + 15,
-  width: 50,
-  height: 5,
-  color: "black",
+  width: 32,
+  height: 8,
+  animations: arrowSheet.animations,
   dx: -3,
 });
 
@@ -393,10 +429,10 @@ let start = Scene({
 
 let game = Scene({
   id: 'game',
-  objects: [waterAndSkyA, waterAndSkyB, cloud2A, cloud2B, cloud1A, cloud1B, bridgeA, bridgeB, knight, obstacle, enemy, skelly, arrow, sword, pointsText,  gameOverText, pressRestartText],
+  objects: [waterAndSkyA, waterAndSkyB, cloud2A, cloud2B, cloud1A, cloud1B, bridgeA, bridgeB, knight, rock, enemy, skelly, arrow, sword, pointsText,  gameOverText, pressRestartText],
 });
 
-let sprites = [obstacle, enemy, skelly, arrow];
+let sprites = [rock, enemy, skelly, arrow];
 
 let loop = GameLoop({
   update: function () {
@@ -440,8 +476,12 @@ let loop = GameLoop({
     {
     pressRestartText.counter ++;
     knight.update();
+    if (!gameOver){
     knight.playAnimation('knightWalk');
-    obstacle.update();
+    }
+    arrow.playAnimation("arrow");
+    rock.update();
+    rock.playAnimation("rock");
     enemy.update();
     enemy.playAnimation('enemyWalk');
     arrow.update();
@@ -449,8 +489,8 @@ let loop = GameLoop({
     skelly.playAnimation('skellyWalk');
     skelly.update();
 
-    if (obstacle.dx >= -13 && !gameOver) {
-      obstacle.dx *= 1.0001;
+    if (rock.dx >= -13 && !gameOver) {
+      rock.dx *= 1.0001;
       enemy.dx *= 1.0001;
       skelly.dx *= 1.0001;
       arrow.dx *= 1.0001;
@@ -525,7 +565,7 @@ let loop = GameLoop({
       }
       knight.ducking = true;
       duckCooldown = 60;
-      knight.height = 30;
+      knight.height = 32;
       knight.y = 165;
       duckCooldown -= 1
     }
@@ -545,22 +585,22 @@ let loop = GameLoop({
     }
 
     waterAndSkySprites.forEach((sprite) => {
-      sprite.dx = obstacle.dx / 5;
+      sprite.dx = rock.dx / 5;
       sprite.update();
     });
 
     bridgeSprites.forEach((sprite) => {
-      sprite.dx = obstacle.dx * 0.75;
+      sprite.dx = rock.dx * 0.75;
       sprite.update();
     });
 
     cloud1Sprites.forEach((sprite) => {
-      sprite.dx = obstacle.dx / 3;
+      sprite.dx = rock.dx / 3;
       sprite.update();
     });
 
     cloud2Sprites.forEach((sprite) => {
-      sprite.dx = obstacle.dx / 8;
+      sprite.dx = rock.dx / 8;
       sprite.update();
     });
 
@@ -569,10 +609,11 @@ let loop = GameLoop({
         highScore = points;
         localStorage.setItem("highScore", highScore);
       }
-      knight.y = 229;
-      knight.width = 64;
-      knight.height = 32;
-      obstacle.dx = 0;
+      knight.animations = layingSheet.animations;
+      knight.y = 163;
+      knight.width = 128;
+      knight.height = 64;
+      rock.dx = 0;
       enemy.dx = 0;
       skelly.dx = 0;
       gameOverText.opacity = 1;
@@ -590,11 +631,13 @@ let loop = GameLoop({
         gameOver = false
         gameOverText.opacity = 0;
         pressRestartText.opacity = 0;
+        knight.animations = characterSheet.animations;
+        knight.playAnimation("knightWalk");
         knight.width = 32;
         points = 0;
         multiplier = 0.0001;
-        obstacle.x = 256;
-        obstacle.dx = -3
+        rock.x = 256;
+        rock.dx = -3
         enemy.x = 512;
         enemy.dx = -3;
         skelly.x = 1200;
@@ -629,7 +672,7 @@ let loop = GameLoop({
     // update sword position when jumping
     sword.y = knight.y + 30;
   }
-  // console.log(obstacle.dx);
+  // console.log(rock.dx);
 },
   render: function () {
     if (activeScene == "menu") {
