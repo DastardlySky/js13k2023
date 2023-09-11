@@ -100,8 +100,12 @@ function drawPixelText(context, text, x, y, font, threshold, scalingFactor, wigg
     frameHeight: 32,
     animations: {
       knightWalk: {
-        frames: '1..1',
-        frameRate: 30
+        frames: '10..12',
+        frameRate: 1
+      },
+      knightJump: {
+        frames: '6..6',
+        frameRate: 1
       },
       enemyWalk: {
         frames: '0..0',
@@ -116,11 +120,11 @@ function drawPixelText(context, text, x, y, font, threshold, scalingFactor, wigg
 
   let layingSheet = SpriteSheet({
     image: image,
-    frameWidth: 64,
-    frameHeight: 32,
+    frameWidth: 32,
+    frameHeight: 16,
     animations: {
       laying: {
-        frames: '1..1',
+        frames: '2..2',
         frameRate: 1
       },
     }
@@ -144,7 +148,7 @@ function drawPixelText(context, text, x, y, font, threshold, scalingFactor, wigg
     frameHeight: 16,
     animations: {
       rock: {
-        frames: '3..3',
+        frames: '13..14',
         frameRate: 1
       },
     }
@@ -436,6 +440,7 @@ let sprites = [rock, enemy, skelly, arrow];
 
 let loop = GameLoop({
   update: function () {
+    rock.animations.rock.frameRate = -rock.dx*2;
     bridgeA.playAnimation('bridge');
     bridgeB.playAnimation('bridge');
     cloud1A.playAnimation('clouds1');
@@ -478,6 +483,7 @@ let loop = GameLoop({
     knight.update();
     if (!gameOver){
     knight.playAnimation('knightWalk');
+    knight.animations.knightWalk.frameRate = -rock.dx*2;
     }
     arrow.playAnimation("arrow");
     rock.update();
@@ -507,10 +513,13 @@ let loop = GameLoop({
     //make knight fall
     knight.dy += gravity;
 
-    //if on (or below) ground, go to ground
+    //if on (or below) ground, go to ground, else play jumping animation
     if (knight.y >= ground) {
       knight.y = ground;
       knight.jumping = false;
+    }
+    else{
+      knight.playAnimation("knightJump")
     }
 
     //if on ground, make knight jump up
@@ -611,8 +620,8 @@ let loop = GameLoop({
       }
       knight.animations = layingSheet.animations;
       knight.y = 163;
-      knight.width = 128;
-      knight.height = 64;
+      knight.width = 64;
+      knight.height = 32;
       rock.dx = 0;
       enemy.dx = 0;
       skelly.dx = 0;
@@ -688,4 +697,4 @@ let loop = GameLoop({
 loop.start()
 };
 
-image.src = 'sheet.png';
+image.src = 'sheet.webp';
