@@ -23,7 +23,6 @@ let points = 0;
 let highScore = localStorage.getItem("highScore") || 0;
 let multiplier = 0.0001;
 var AttackCooldown = 0;   
-var duckCooldown = 0;
 var activeScene = "menu"
 
 function playSong() {
@@ -105,6 +104,14 @@ function drawPixelText(context, text, x, y, font, threshold, scalingFactor, wigg
       },
       knightJump: {
         frames: '6..6',
+        frameRate: 1
+      },
+      knightSlide: {
+        frames: '16..16',
+        frameRate: 1
+      },
+      knightSlideLegs: {
+        frames: '17..17',
         frameRate: 1
       },
       enemyWalk: {
@@ -226,7 +233,7 @@ let controlsText = Text({
   y: 40,
   anchor: { x: 0.5, y: 0.5 },
   render() {
-    drawPixelText(this.context, 'CONTROLS:', this.x, this.y, '12px Calibri', 13, 2, false);
+    drawPixelText(this.context, 'CONTROLS:', this.x, this.y, '12px Calibri', 29, 2, false);
   }
 });
 
@@ -415,11 +422,20 @@ let knight = Sprite({
   animations: characterSheet.animations
 });
 
+let knightLegs = Sprite({
+  x: 62,
+  y: 156,
+  width: 32,
+  height: 64,
+  opacity: 0,
+  animations: characterSheet.animations
+});
+
 let sword = Sprite({
   x: 50,
   y: 220,
-  width: 50,
-  height: 10,
+  width: 64,
+  height: 16,
   color: "pink",
   dx: 0,
   opacity: 0,
@@ -433,7 +449,7 @@ let start = Scene({
 
 let game = Scene({
   id: 'game',
-  objects: [waterAndSkyA, waterAndSkyB, cloud2A, cloud2B, cloud1A, cloud1B, bridgeA, bridgeB, knight, rock, enemy, skelly, arrow, sword, pointsText,  gameOverText, pressRestartText],
+  objects: [waterAndSkyA, waterAndSkyB, cloud2A, cloud2B, cloud1A, cloud1B, bridgeA, bridgeB, knight, knightLegs, rock, enemy, skelly, arrow, sword, pointsText,  gameOverText, pressRestartText],
 });
 
 let sprites = [rock, enemy, skelly, arrow];
@@ -573,12 +589,15 @@ let loop = GameLoop({
       zzfx(...[,,-5,.03,.02,.08,1,.19,1.6,1.1,200,,,,2,,,.67,.02]); // duck
       }
       knight.ducking = true;
-      duckCooldown = 60;
-      knight.height = 32;
-      knight.y = 165;
-      duckCooldown -= 1
+      knightLegs.opacity = 1;
+      knightLegs.playAnimation("knightSlideLegs")
+      knight.playAnimation("knightSlide");
+      knightLegs.opacity = 1;
+      knight.height = 64;
+      knight.y = 155;
     }
     else{
+      knightLegs.opacity = 0;
       knight.height = 64;
       knight.ducking = false;
     }
@@ -619,7 +638,7 @@ let loop = GameLoop({
         localStorage.setItem("highScore", highScore);
       }
       knight.animations = layingSheet.animations;
-      knight.y = 163;
+      knight.y = 169;
       knight.width = 64;
       knight.height = 32;
       rock.dx = 0;
