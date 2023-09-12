@@ -819,4 +819,4 @@ let loop = GameLoop({
 loop.start()
 };
 
-image.src = 'assets/sheet.png';
+image.src = 'assets/sheet.webp';
