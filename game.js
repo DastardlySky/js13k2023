@@ -348,7 +348,7 @@ let waterAndSkyA = Sprite({
   width: 512,
   height: 256,
   animations: backgroundSheet.animations,
-  dx: -0.75,
+  dx: -0.5,
   order: 0,
 });
 
@@ -358,7 +358,7 @@ let waterAndSkyB = Sprite({
   width: 512,
   height: 256,
   animations: backgroundSheet.animations,
-  dx: -0.75,
+  dx: -0.5,
   order: 1,
 });
 
@@ -368,7 +368,7 @@ let bridgeA = Sprite({
   width: 512,
   height: 256,
   animations: backgroundSheet.animations,
-  dx: -0.75,
+  dx: -1.25,
   order: 0,
 });
 
@@ -378,7 +378,7 @@ let bridgeB = Sprite({
   width: 512,
   height: 256,
   animations: backgroundSheet.animations,
-  dx: -0.75,
+  dx: -1.25,
   order: 0,
 });
 
@@ -388,7 +388,7 @@ let treesA = Sprite({
   width: 512,
   height: 256,
   animations: backgroundSheet.animations,
-  dx: -0.75,
+  dx: -1,
   order: 0,
 });
 
@@ -398,7 +398,7 @@ let treesB = Sprite({
   width: 512,
   height: 256,
   animations: backgroundSheet.animations,
-  dx: -0.75,
+  dx: -1,
   order: 0,
 });
 
