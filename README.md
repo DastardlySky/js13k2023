@@ -17,4 +17,4 @@ Tools:
 - built with [kontra.js](https://straker.github.io/kontra/) 
 - sound effects made with [ZzFX](https://killedbyapixel.github.io/ZzFX/)
 - music made with [ZzFXM](https://keithclark.github.io/ZzFXM/tracker/)
-- minified with [rollup-plugin-kontra](https://github.com/straker/rollup-plugin-kontra) and [roadroller](https://github.com/lifthrasiir/roadroller) 
+- minified using [rollup-plugin-kontra](https://github.com/straker/rollup-plugin-kontra) and [roadroller](https://github.com/lifthrasiir/roadroller) 
