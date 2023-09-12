@@ -509,7 +509,7 @@ let loop = GameLoop({
     knight.update();
     if (!gameOver){
     knight.playAnimation('knightWalk');
-    knight.animations.knightWalk.frameRate = -rock.dx*2;
+    knight.animations.knightWalk.frameRate = -rock.dx * 2;
     }
     arrow.playAnimation("arrow");
     rock.update();
@@ -524,10 +524,9 @@ let loop = GameLoop({
     let speedMultiplier = 1.0001;
 
     if (rock.dx >= -13 && !gameOver) {
-      rock.dx *= speedMultiplier;
-      enemy.dx *= speedMultiplier;
-      skelly.dx *= speedMultiplier;
-      arrow.dx *= speedMultiplier;
+      for (let enemySprite of sprites) {
+        enemySprite.dx *= speedMultiplier;
+      }
     }
 
     // points system start
@@ -649,10 +648,10 @@ let loop = GameLoop({
       knight.y = 169;
       knight.width = 64;
       knight.height = 32;
-      rock.dx = 0;
-      enemy.dx = 0;
+      for (let enemySprite of sprites) {
+        enemySprite.dx = 0;
+      }
       enemy.animations.enemyWalk.frameRate = 0;
-      skelly.dx = 0;
       skelly.animations.skellyWalk.frameRate = 0;
       gameOverText.opacity = 1;
       if (pressRestartText.counter % 30 === 0) {
