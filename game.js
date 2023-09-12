@@ -520,6 +520,7 @@ let loop = GameLoop({
     arrow.update();
     sword.update();
     skelly.playAnimation('skellyWalk');
+    skelly.update();
 
     let speedMultiplier = 1.0001;
   
