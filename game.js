@@ -9,7 +9,7 @@ let gameOver = false;
 let bpm = 100;
 let node = null;
 let playingSong = true;
-
+let starting = false;
 
 let image = new Image();
 image.onload = function() {
@@ -317,6 +317,8 @@ let pressRestartText = Sprite({
   }
 });
 
+const textSprites = [knightGameText, pressStartText, highScoreMainText, controlsText, jumpText, duckText, spaceText];
+
 let waterAndSkyA = Sprite({
   x: 0,
   y: 0,
@@ -526,15 +528,27 @@ let loop = GameLoop({
     loopBackground(cloud2A, cloud2B);
 
     if (activeScene == "menu"){
+
+      if (starting){
+        for (let textSprite of textSprites) {
+          textSprite.opacity -= 0.1;
+        }
+        if (knightGameText.opacity <= 0.01){
+          activeScene = "game"
+          if (!gameOver){
+            playSong();
+            }
+          }
+      }
       pressStartText.counter++;
+      if (!starting){
       if (pressStartText.counter % 30 === 0) {
         pressStartText.opacity = pressStartText.opacity === 1 ? 0 : 1;
       }
+    }
       if (keyPressed("enter")){
-        activeScene = "game"
-        if (!gameOver){
-          playSong();
-        }
+        //loop of textSprites lowering opacity
+        starting = true
       }
     }
     if (activeScene == "game")
@@ -609,7 +623,8 @@ let loop = GameLoop({
       // check for collisions
       function checkCollisions(opponent) {
         if (collides(sword, opponent)) {
-          opponent.x = -50;
+          opponent.x = 200;
+          opponent.dy = 1
         }
       }
 
