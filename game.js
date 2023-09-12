@@ -478,23 +478,18 @@ let loop = GameLoop({
     cloud1B.playAnimation('clouds1');
     cloud2A.playAnimation('clouds2');
     cloud2B.playAnimation('clouds2');
-    if(waterAndSkyA.x <= -512){
-      waterAndSkyA.x = 0;
-      waterAndSkyB.x = 512;
-    }
-    if(bridgeA.x <= -512){
-      bridgeA.x = 0;
-      bridgeB.x = 512;
-    }
-    if(cloud1A.x <= -512){
-      cloud1A.x = 0;
-      cloud1B.x = 512;
-    }
-    if(cloud2A.x <= -512){
-      cloud2A.x = 0;
-      cloud2B.x = 512;
+
+    function loopBackground(backgroundOne, backgroundTwo) {
+      if(backgroundOne.x <= -512) {
+        backgroundOne.x = 0;
+        backgroundTwo.x = 512;
+      }
     }
 
+    loopBackground(waterAndSkyA, waterAndSkyB);
+    loopBackground(bridgeA, bridgeB);
+    loopBackground(cloud1A, cloud1B);
+    loopBackground(cloud2A, cloud2B);
 
     if (activeScene == "menu"){
       pressStartText.counter++;
@@ -549,7 +544,7 @@ let loop = GameLoop({
       knight.y = ground;
       knight.jumping = false;
     }
-    else{
+    else {
       knight.playAnimation("knightJump")
     }
 
@@ -628,25 +623,17 @@ let loop = GameLoop({
       }
     }
 
-    waterAndSkySprites.forEach((sprite) => {
-      sprite.dx = rock.dx / 5;
-      sprite.update();
-    });
+    function calculateSpeed(backgroundSprites, speed) {
+      backgroundSprites.forEach((sprite) => {
+        sprite.dx = rock.dx / speed;
+        sprite.update();
+      });
+    }
 
-    bridgeSprites.forEach((sprite) => {
-      sprite.dx = rock.dx * 0.75;
-      sprite.update();
-    });
-
-    cloud1Sprites.forEach((sprite) => {
-      sprite.dx = rock.dx / 3;
-      sprite.update();
-    });
-
-    cloud2Sprites.forEach((sprite) => {
-      sprite.dx = rock.dx / 8;
-      sprite.update();
-    });
+    calculateSpeed(waterAndSkySprites, 5);
+    calculateSpeed(cloud1Sprites, 3);
+    calculateSpeed(cloud2Sprites, 8);
+    calculateSpeed(bridgeSprites, 8);
 
     if (gameOver){
       // dying
