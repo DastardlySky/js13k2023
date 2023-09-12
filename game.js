@@ -135,11 +135,11 @@ function drawPixelText(context, text, x, y, font, threshold, scalingFactor, wigg
         frameRate: 1
       },
       deadEnemy: {
-        frames: '11..11',
+        frames: '12..12',
         frameRate: 1
       },
       deadSkelly: {
-        frames: '2..3',
+        frames: '13..13',
         frameRate: 1
       }
     }
@@ -327,7 +327,7 @@ let pressRestartText = Sprite({
 
 let arrowdown = Sprite({
   x: 295,
-  y: ground + 15,
+  y: 146,
   width: 16,
   height: 32,
   animations: controlsSheet.animations,
@@ -463,21 +463,6 @@ let arrow = Sprite({
   dead: false,
 });
 
-let arrowdown = Sprite({
-  x: 295,
-  y: 146,
-  width: 16,
-  height: 32,
-  animations: controlsSheet.animations,
-});
-
-let arrowup = Sprite({
-  x: 296,
-  y: 120,
-  width: 16,
-  height: 32,
-  animations: controlsSheet.animations,
-});
 
 let knight = Sprite({
   x: 30,
@@ -661,6 +646,7 @@ let loop = GameLoop({
         if (collides(sword, opponent)) {
           opponent.width = 64;
           opponent.height = 32;
+          opponent.y += 16;
           opponent.dy = 1
           opponent.dead = true;
         }
@@ -804,6 +790,8 @@ let loop = GameLoop({
 
         sprite.x = newSpriteX;
         if(sprite.dead == true){
+        sprite.width = 32;
+        sprite.height = 64;
         sprite.dead = false;
         sprite.dy = 0;
         sprite.y = ground;
