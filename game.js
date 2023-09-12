@@ -67,8 +67,7 @@ function drawPixelText(context, text, x, y, font, threshold, scalingFactor, wigg
   let I = d.getImageData(0, 0, canvasWidth, canvasHeight);
 
   // set fill style
-  context.fillStyle = 'darkblue';
-  context.strokeStyle = 'pink';
+  context.fillStyle = '#001937';
   context.lineWidth = 1;
 
   let offsetY = 0; // initialize the offsetY variable outside the loop
@@ -211,11 +210,11 @@ function drawPixelText(context, text, x, y, font, threshold, scalingFactor, wigg
         frames: '2..2',
         frameRate: 1
       },
-      clouds1: {
+      trees: {
         frames: '3..3',
         frameRate: 1
       },
-      clouds2: {
+      clouds: {
         frames: '4..4',
         frameRate: 1
       },
@@ -383,7 +382,7 @@ let bridgeB = Sprite({
   order: 0,
 });
 
-let cloud1A = Sprite({
+let treesA = Sprite({
   x: 0,
   y: 0,
   width: 512,
@@ -393,7 +392,7 @@ let cloud1A = Sprite({
   order: 0,
 });
 
-let cloud1B = Sprite({
+let treesB = Sprite({
   x: 511,
   y: 0,
   width: 512,
@@ -403,7 +402,7 @@ let cloud1B = Sprite({
   order: 0,
 });
 
-let cloud2A = Sprite({
+let cloudA = Sprite({
   x: 0,
   y: 0,
   width: 512,
@@ -413,7 +412,7 @@ let cloud2A = Sprite({
   order: 0,
 });
 
-let cloud2B = Sprite({
+let cloudB = Sprite({
   x: 510,
   y: 0,
   width: 512,
@@ -497,12 +496,12 @@ let sword = Sprite({
 
 let start = Scene({
   id: 'start',
-  objects: [waterAndSkyA, waterAndSkyB, cloud2A, cloud2B, cloud1A, cloud1B, bridgeA, bridgeB, knightGameText, pressStartText, highScoreMainText, controlsText, jumpText, duckText, spaceText, arrowdown, arrowup]
+  objects: [waterAndSkyA, waterAndSkyB, cloudA, cloudB, treesA, treesB, bridgeA, bridgeB, knightGameText, pressStartText, highScoreMainText, controlsText, jumpText, duckText, spaceText, arrowdown, arrowup]
 });
 
 let game = Scene({
   id: 'game',
-  objects: [waterAndSkyA, waterAndSkyB, cloud2A, cloud2B, cloud1A, cloud1B, bridgeA, bridgeB, knight, knightLegs, rock, enemy, skelly, arrow, sword, pointsText,  gameOverText, pressRestartText],
+  objects: [waterAndSkyA, waterAndSkyB, cloudA, cloudB, treesA, treesB, bridgeA, bridgeB, knight, knightLegs, rock, enemy, skelly, arrow, sword, pointsText,  gameOverText, pressRestartText],
 });
 
 // creates an array of the enemy sprites
@@ -511,8 +510,8 @@ let sprites = [rock, enemy, skelly, arrow];
 // creates an array of the background sprites
 let waterAndSkySprites = [waterAndSkyA, waterAndSkyB];
 let bridgeSprites = [bridgeA, bridgeB];
-let cloud1Sprites = [cloud1A, cloud1B];
-let cloud2Sprites = [cloud2A, cloud2B];
+let treeSprites = [treesA, treesB];
+let cloudSprites = [cloudA, cloudB];
 
 let loop = GameLoop({
   update: function () {
@@ -525,10 +524,10 @@ let loop = GameLoop({
     rock.animations.rock.frameRate = -rock.dx * 2;
     bridgeA.playAnimation('bridge');
     bridgeB.playAnimation('bridge');
-    cloud1A.playAnimation('clouds1');
-    cloud1B.playAnimation('clouds1');
-    cloud2A.playAnimation('clouds2');
-    cloud2B.playAnimation('clouds2');
+    treesA.playAnimation('trees');
+    treesB.playAnimation('trees');
+    cloudA.playAnimation('clouds');
+    cloudB.playAnimation('clouds');
     arrowup.playAnimation('arrowup');
     arrowdown.playAnimation('arrowdown');
 
@@ -541,8 +540,8 @@ let loop = GameLoop({
 
     loopBackground(waterAndSkyA, waterAndSkyB);
     loopBackground(bridgeA, bridgeB);
-    loopBackground(cloud1A, cloud1B);
-    loopBackground(cloud2A, cloud2B);
+    loopBackground(treesA, treesB);
+    loopBackground(cloudA, cloudB);
 
     if (activeScene == "menu"){
 
@@ -718,8 +717,8 @@ let loop = GameLoop({
 
     // speed is gradually updated for background sprites
     calculateSpeed(waterAndSkySprites, 5);
-    calculateSpeed(cloud1Sprites, 3);
-    calculateSpeed(cloud2Sprites, 8);
+    calculateSpeed(treeSprites, 3);
+    calculateSpeed(cloudSprites, 8);
     calculateSpeed(bridgeSprites, 1.25);
 
     if (gameOver){
@@ -820,4 +819,4 @@ let loop = GameLoop({
 loop.start()
 };
 
-image.src = 'assets/sheet.webp';
+image.src = 'assets/sheet.png';
