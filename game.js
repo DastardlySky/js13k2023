@@ -325,7 +325,23 @@ let pressRestartText = Sprite({
   }
 });
 
-const textSprites = [knightGameText, pressStartText, highScoreMainText, controlsText, jumpText, duckText, spaceText];
+let arrowdown = Sprite({
+  x: 295,
+  y: ground + 15,
+  width: 16,
+  height: 32,
+  animations: controlsSheet.animations,
+});
+
+let arrowup = Sprite({
+  x: 296,
+  y: 120,
+  width: 16,
+  height: 32,
+  animations: controlsSheet.animations,
+});
+
+const textSprites = [knightGameText, pressStartText, highScoreMainText, controlsText, jumpText, duckText, spaceText, arrowup, arrowdown];
 
 let waterAndSkyA = Sprite({
   x: 0,
@@ -445,22 +461,6 @@ let arrow = Sprite({
   animations: arrowSheet.animations,
   dx: -3,
   dead: false,
-});
-
-let arrowdown = Sprite({
-  x: 295,
-  y: ground + 15,
-  width: 16,
-  height: 32,
-  animations: controlsSheet.animations,
-});
-
-let arrowup = Sprite({
-  x: 296,
-  y: 120,
-  width: 16,
-  height: 32,
-  animations: controlsSheet.animations,
 });
 
 let knight = Sprite({
@@ -643,7 +643,8 @@ let loop = GameLoop({
       // check for collisions
       function checkCollisions(opponent) {
         if (collides(sword, opponent)) {
-          opponent.x = 200;
+          opponent.width = 64;
+          opponent.height = 32;
           opponent.dy = 1
           opponent.dead = true;
         }
