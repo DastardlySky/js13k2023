@@ -115,12 +115,12 @@ function drawPixelText(context, text, x, y, font, threshold, scalingFactor, wigg
         frameRate: 1
       },
       enemyWalk: {
-        frames: '0..0',
-        frameRate: 30
+        frames: '18..19',
+        frameRate: 5
       },
       skellyWalk: {
-        frames: '2..2',
-        frameRate: 30
+        frames: '2..3',
+        frameRate: 5
       }
     }
   });
@@ -247,11 +247,11 @@ let jumpText = Text({
 });
 
 let duckText = Text({
-  x: 93,
+  x: 92,
   y: 66,
   anchor: { x: 0.5, y: 0.5 },
   render() {
-    drawPixelText(this.context, 'DUCK:   S / ⬇', this.x, this.y, '12px Calibri', 13, 2, false);
+    drawPixelText(this.context, 'SLIDE:   S / ⬇', this.x, this.y, '12px Calibri', 13, 2, false);
   }
 });
 
@@ -457,6 +457,8 @@ let sprites = [rock, enemy, skelly, arrow];
 let loop = GameLoop({
   update: function () {
     rock.animations.rock.frameRate = -rock.dx*2;
+    enemy.animations.enemyWalk.frameRate = -enemy.dx;
+    skelly.animations.skellyWalk.frameRate = -skelly.dx;
     bridgeA.playAnimation('bridge');
     bridgeB.playAnimation('bridge');
     cloud1A.playAnimation('clouds1');
@@ -589,6 +591,7 @@ let loop = GameLoop({
       zzfx(...[,,-5,.03,.02,.08,1,.19,1.6,1.1,200,,,,2,,,.67,.02]); // duck
       }
       knight.ducking = true;
+      sword.opacity = 0;
       knightLegs.opacity = 1;
       knightLegs.playAnimation("knightSlideLegs")
       knight.playAnimation("knightSlide");
@@ -644,7 +647,9 @@ let loop = GameLoop({
       knight.height = 32;
       rock.dx = 0;
       enemy.dx = 0;
+      enemy.animations.enemyWalk.frameRate = 0;
       skelly.dx = 0;
+      skelly.animations.skellyWalk.frameRate = 0;
       gameOverText.opacity = 1;
       if (pressRestartText.counter % 30 === 0) {
         pressRestartText.opacity = pressRestartText.opacity === 1 ? 0 : 1;
