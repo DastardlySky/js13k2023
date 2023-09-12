@@ -134,6 +134,14 @@ function drawPixelText(context, text, x, y, font, threshold, scalingFactor, wigg
         frames: '2..2',
         frameRate: 1
       },
+      deadEnemy: {
+        frames: '11..11',
+        frameRate: 1
+      },
+      deadSkelly: {
+        frames: '2..3',
+        frameRate: 1
+      }
     }
   });
 
@@ -390,6 +398,7 @@ let rock = Sprite({
   height: 16,
   animations: obstacleSheet.animations,
   dx: -3,
+  dead: false,
 });
 
 let skelly = Sprite({
@@ -399,6 +408,7 @@ let skelly = Sprite({
   height: 64,
   animations: characterSheet.animations,
   dx: -3,
+  dead: false,
 });
 
 let enemy = Sprite({
@@ -408,6 +418,7 @@ let enemy = Sprite({
   height: 64,
   animations: characterSheet.animations,
   dx: -3,
+  dead: false,
 });
 
 let arrow = Sprite({
@@ -417,6 +428,7 @@ let arrow = Sprite({
   height: 8,
   animations: arrowSheet.animations,
   dx: -3,
+  dead: false,
 });
 
 let knight = Sprite({
@@ -428,7 +440,7 @@ let knight = Sprite({
   attacking: false,
   ducking: false,
   jumping: false,
-  animations: characterSheet.animations
+  animations: characterSheet.animations,
 });
 
 let knightLegs = Sprite({
@@ -437,7 +449,7 @@ let knightLegs = Sprite({
   width: 32,
   height: 64,
   opacity: 0,
-  animations: characterSheet.animations
+  animations: characterSheet.animations,
 });
 
 let sword = Sprite({
@@ -472,9 +484,13 @@ let cloud2Sprites = [cloud2A, cloud2B];
 
 let loop = GameLoop({
   update: function () {
+    if (!enemy.dead) {
+      enemy.animations.enemyWalk.frameRate = -enemy.dx;
+    }
+    if(!skelly.dead){
+      skelly.animations.skellyWalk.frameRate = -skelly.dx;
+    }
     rock.animations.rock.frameRate = -rock.dx * 2;
-    enemy.animations.enemyWalk.frameRate = -enemy.dx;
-    skelly.animations.skellyWalk.frameRate = -skelly.dx;
     bridgeA.playAnimation('bridge');
     bridgeB.playAnimation('bridge');
     cloud1A.playAnimation('clouds1');
@@ -529,11 +545,15 @@ let loop = GameLoop({
     arrow.playAnimation("arrow");
     rock.update();
     rock.playAnimation("rock");
-    enemy.update();
+    if(!enemy.dead){
     enemy.playAnimation('enemyWalk');
+    }
+    enemy.update();
     arrow.update();
     sword.update();
+    if(!skelly.dead){
     skelly.playAnimation('skellyWalk');
+    }
     skelly.update();
 
     let speedMultiplier = 1.0001;
@@ -592,11 +612,22 @@ let loop = GameLoop({
         if (collides(sword, opponent)) {
           opponent.x = 200;
           opponent.dy = 1
+          opponent.dead = true;
         }
       }
 
       checkCollisions(enemy);
       checkCollisions(skelly);
+
+      if (enemy.dead) {
+        enemy.animations = layingSheet.animations;
+        enemy.playAnimation("deadEnemy");
+      }
+
+      if (skelly.dead) {
+        skelly.animations = layingSheet.animations;
+        skelly.playAnimation("deadSkelly");
+      }
 
       sword.x += 1;
     }
@@ -634,7 +665,7 @@ let loop = GameLoop({
 
     // check for a game over
     for (let sprite of sprites) {
-      if (collides(knight, sprite)) {
+      if (collides(knight, sprite) && !sprite.dead) {
         if (!gameOver){
         zzfx(...[,,348,.1,.14,.46,,.14,-0.1,-2.8,-62,.08,.06,,,.1,,.48,.26]); // game over sound effect
         gameOver = true;
@@ -722,7 +753,15 @@ let loop = GameLoop({
         } while (isCloseToOtherSprites(newSpriteX, sprite, sprites) == true);
 
         sprite.x = newSpriteX;
+        if(sprite.dead == true){
+        sprite.dead = false;
+        sprite.dy = 0;
+        sprite.y = ground;
+        sprite.animations = characterSheet.animations;
+        enemy.playAnimation('enemyWalk');
+        skelly.playAnimation('skellyWalk');
       }
+    }
     }
 
     // sword position is updated when jumping
