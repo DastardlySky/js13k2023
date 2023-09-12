@@ -67,7 +67,7 @@ function drawPixelText(context, text, x, y, font, threshold, scalingFactor, wigg
   let I = d.getImageData(0, 0, canvasWidth, canvasHeight);
 
   // set fill style
-  context.fillStyle = '#001937';
+  context.fillStyle = '#001023';
   context.lineWidth = 1;
 
   let offsetY = 0; // initialize the offsetY variable outside the loop
