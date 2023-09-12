@@ -437,7 +437,7 @@ let arrow = Sprite({
 
 let arrowdown = Sprite({
   x: 295,
-  y: ground + 15,
+  y: 146,
   width: 16,
   height: 32,
   animations: controlsSheet.animations,
