@@ -633,6 +633,7 @@ let loop = GameLoop({
     });
 
     if (gameOver){
+      // dying
       if (points > highScore) {
         highScore = points;
         localStorage.setItem("highScore", highScore);
@@ -650,9 +651,8 @@ let loop = GameLoop({
       }
       bpm = 100;
       node.stop();
-    }
 
-    if (gameOver){
+      // reinitialising game
       if(keyPressed("enter")){
         bpm = 100;
         if(!playingSong){playSong();}
