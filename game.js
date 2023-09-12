@@ -571,13 +571,15 @@ let loop = GameLoop({
     // if sword is showing
     if (sword.opacity == 1) {
       // check for collisions
-      if (collides(sword, enemy)) {
-        enemy.x = -50;
+
+      function checkCollisions(opponent) {
+        if (collides(sword, opponent)) {
+          opponent.x = -50;
+        }
       }
 
-      if (collides(sword, skelly)) {
-        skelly.x = -50;
-      }
+      checkCollisions(enemy);
+      checkCollisions(skelly);
 
       AttackCooldown -= 1;
       sword.x += 1;
