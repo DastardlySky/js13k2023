@@ -18,3 +18,4 @@ Tools:
 - sound effects made with [ZzFX](https://killedbyapixel.github.io/ZzFX/)
 - music made with [ZzFXM](https://keithclark.github.io/ZzFXM/tracker/)
 - minified using [rollup-plugin-kontra](https://github.com/straker/rollup-plugin-kontra) and [roadroller](https://github.com/lifthrasiir/roadroller) 
+- pixel art text generated with [minipixelart](https://xem.github.io/miniPixelFont/js13k.html)
