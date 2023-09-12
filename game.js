@@ -521,11 +521,13 @@ let loop = GameLoop({
     skelly.playAnimation('skellyWalk');
     skelly.update();
 
+    let speedMultiplier = 1.0001;
+
     if (rock.dx >= -13 && !gameOver) {
-      rock.dx *= 1.0001;
-      enemy.dx *= 1.0001;
-      skelly.dx *= 1.0001;
-      arrow.dx *= 1.0001;
+      rock.dx *= speedMultiplier;
+      enemy.dx *= speedMultiplier;
+      skelly.dx *= speedMultiplier;
+      arrow.dx *= speedMultiplier;
     }
 
     // points system start
