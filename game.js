@@ -635,7 +635,7 @@ let loop = GameLoop({
     calculateSpeed(waterAndSkySprites, 5);
     calculateSpeed(cloud1Sprites, 3);
     calculateSpeed(cloud2Sprites, 8);
-    calculateSpeed(bridgeSprites, 8);
+    calculateSpeed(bridgeSprites, 1);
 
     if (gameOver){
       // dying
