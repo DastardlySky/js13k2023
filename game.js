@@ -28,21 +28,21 @@ var activeScene = "menu"
 function playSong() {
   console.log(bpm);
   let song = [[[,0,25,.002,.02,.08,3,,,,,,,,,.1,.01]],[[[,,13,,,,13,,,15,17,,13,,17,,20,,25,,,,25,,,24,25,,20,,17,,13,,18,,,,22,,,18,17,,20,,17,,13,,15,,,,20,,,22,20,,18,,17,,15,,]],[[,,13,,,,13,,,15,17,,13,,17,,20,,25,,,,25,,,24,25,,20,,17,,13,,18,,,,22,,,18,17,,20,,17,,13,,15,,,,13,,,12,13,,,,24,,,25]],[[,,27,,,,27,,,27,27,,24,,20,,,,25,,,,29,,,27,25,,22,,20,,,,25,,,,25,,,25,25,,,,25,,,24,22,,25,,24,,22,,20,,18,,17,,15,,]],[[,,13,,,,13,,,15,17,,13,,17,,20,,25,,,,25,,,24,25,,20,,17,,13,,18,,,,22,,,18,17,,20,,17,,13,,15,,,,13,,,12,13,,,,,,,,]]],[0,1,2,3],bpm,{"title":"Scotland The Brave","instruments":["Poly Synth"],"patterns":["Pattern 0","Pattern 1","Pattern 2","Pattern 3"]}]
-  // Generate the sample data and play the song
+  // generate the sample data and play the song
   let buffer = zzfxM(...song);
   node = zzfxP(...buffer);
   playingSong = true;
 
-  // Attach an onended event to update BPM and play again
+  // attach an onended event to update BPM and play again
   node.onended = function() {
     playingSong = false;
     
-    // Increase BPM
+    // increase BPM
     if (points >= 1){
     bpm += 20;
     }
     
-    // Play the song again with updated BPM
+    // play the song again with updated BPM
     if (!gameOver && !playingSong){
       playSong();
     }
@@ -51,7 +51,7 @@ function playSong() {
 
 let time = 0;
 
-// Custom function to draw pixel art text
+// custom function to draw pixel art text
 function drawPixelText(context, text, x, y, font, threshold, scalingFactor, wiggle) {
   const canvasWidth = 250;
   const canvasHeight = 32;
@@ -66,12 +66,12 @@ function drawPixelText(context, text, x, y, font, threshold, scalingFactor, wigg
 
   let I = d.getImageData(0, 0, canvasWidth, canvasHeight);
 
-  // Set fill style
+  // set fill style
   context.fillStyle = 'darkblue';
   context.strokeStyle = 'pink';
   context.lineWidth = 1;
 
-  let offsetY = 0; // Initialize the offsetY variable outside the loop
+  let offsetY = 0; // initialize the offsetY variable outside the loop
 
   for (let i = 0; i < canvasWidth; i++) {
     for (let j = 0; j < canvasHeight; j++) {
@@ -81,10 +81,10 @@ function drawPixelText(context, text, x, y, font, threshold, scalingFactor, wigg
         I.data[(j * canvasWidth + i) * 4 + 3] > threshold
       ) {
         if (wiggle) {
-          // Only calculate offsetY if wiggle is true
+          // only calculate offsetY if wiggle is true
           offsetY = Math.sin(time + i * 0.06) * 5;
         }
-        // Draw the pixel with the potentially modified offsetY
+        // draw the pixel with potentially modified offsetY
         context.fillRect(x + i * scalingFactor, y + j * scalingFactor + offsetY, scalingFactor, scalingFactor);
         
       }
@@ -381,12 +381,6 @@ let cloud2B = Sprite({
   order: 0,
 });
 
-// Create an array of the sprites
-let waterAndSkySprites = [waterAndSkyA, waterAndSkyB];
-let bridgeSprites = [bridgeA, bridgeB];
-let cloud1Sprites = [cloud1A, cloud1B];
-let cloud2Sprites = [cloud2A, cloud2B];
-
 let rock = Sprite({
   x: 512,
   y: ground + 48,
@@ -465,11 +459,18 @@ let game = Scene({
   objects: [waterAndSkyA, waterAndSkyB, cloud2A, cloud2B, cloud1A, cloud1B, bridgeA, bridgeB, knight, knightLegs, rock, enemy, skelly, arrow, sword, pointsText,  gameOverText, pressRestartText],
 });
 
+// creates an array of the enemy sprites
 let sprites = [rock, enemy, skelly, arrow];
+
+// creates an array of the background sprites
+let waterAndSkySprites = [waterAndSkyA, waterAndSkyB];
+let bridgeSprites = [bridgeA, bridgeB];
+let cloud1Sprites = [cloud1A, cloud1B];
+let cloud2Sprites = [cloud2A, cloud2B];
 
 let loop = GameLoop({
   update: function () {
-    rock.animations.rock.frameRate = -rock.dx*2;
+    rock.animations.rock.frameRate = -rock.dx * 2;
     enemy.animations.enemyWalk.frameRate = -enemy.dx;
     skelly.animations.skellyWalk.frameRate = -skelly.dx;
     bridgeA.playAnimation('bridge');
@@ -519,10 +520,10 @@ let loop = GameLoop({
     arrow.update();
     sword.update();
     skelly.playAnimation('skellyWalk');
-    skelly.update();
 
     let speedMultiplier = 1.0001;
-
+  
+    // speed is gradually updated for enemy sprites
     if (rock.dx >= -13 && !gameOver) {
       for (let enemySprite of sprites) {
         enemySprite.dx *= speedMultiplier;
@@ -572,7 +573,6 @@ let loop = GameLoop({
     // if sword is showing
     if (sword.opacity == 1) {
       // check for collisions
-
       function checkCollisions(opponent) {
         if (collides(sword, opponent)) {
           opponent.x = -50;
@@ -582,13 +582,13 @@ let loop = GameLoop({
       checkCollisions(enemy);
       checkCollisions(skelly);
 
-      AttackCooldown -= 1;
       sword.x += 1;
     }
 
+    // decrements the cooldown if it has been triggered
     if (AttackCooldown > 0) {
       AttackCooldown -= 1;
-      if (AttackCooldown < 15) {
+      if (AttackCooldown < 14) {
         // hide sword
         sword.opacity = 0;
         sword.x = 45;
@@ -610,7 +610,7 @@ let loop = GameLoop({
       knight.height = 64;
       knight.y = 155;
     }
-    else{
+    else {
       knightLegs.opacity = 0;
       knight.height = 64;
       knight.ducking = false;
@@ -633,24 +633,27 @@ let loop = GameLoop({
       });
     }
 
+    // speed is gradually updated for background sprites
     calculateSpeed(waterAndSkySprites, 5);
     calculateSpeed(cloud1Sprites, 3);
     calculateSpeed(cloud2Sprites, 8);
-    calculateSpeed(bridgeSprites, 1);
+    calculateSpeed(bridgeSprites, 1.25);
 
     if (gameOver){
-      // dying
+      // stopping game
       if (points > highScore) {
         highScore = points;
         localStorage.setItem("highScore", highScore);
       }
+
+      for (let enemySprite of sprites) {
+        enemySprite.dx = 0;
+      }
+
       knight.animations = layingSheet.animations;
       knight.y = 169;
       knight.width = 64;
       knight.height = 32;
-      for (let enemySprite of sprites) {
-        enemySprite.dx = 0;
-      }
       enemy.animations.enemyWalk.frameRate = 0;
       skelly.animations.skellyWalk.frameRate = 0;
       gameOverText.opacity = 1;
@@ -672,19 +675,19 @@ let loop = GameLoop({
         knight.width = 32;
         points = 0;
         multiplier = 0.0001;
+
+        for (let enemySprite of sprites) {
+          enemySprite.dx = -3;
+        }
+
         rock.x = 256;
-        rock.dx = -3
         enemy.x = 512;
-        enemy.dx = -3;
         skelly.x = 1200;
-        skelly.dx = -3;
         arrow.x = 768;
-        arrow.dx = -3
       }
     }
     // end
 
-    // refactor this?
     function isCloseToOtherSprites(newSpriteX, currentSprite, sprites) {
       for (let sprite of sprites) {
         if (sprite !== currentSprite && Math.abs(sprite.x - newSpriteX) < 300) {
@@ -694,6 +697,7 @@ let loop = GameLoop({
       return false;
     }
 
+    // if an enemy sprite is too close to another, that sprite will be repositioned appropriately
     for (let sprite of sprites) {
       if (sprite.x <= -50) {
         let newSpriteX;
@@ -705,10 +709,9 @@ let loop = GameLoop({
       }
     }
 
-    // update sword position when jumping
+    // sword position is updated when jumping
     sword.y = knight.y + 25;
   }
-  // console.log(rock.dx);
 },
   render: function () {
     if (activeScene == "menu") {
