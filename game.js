@@ -149,6 +149,19 @@ function drawPixelText(context, text, x, y, font, threshold, scalingFactor, wigg
     }
   });
 
+  
+  let swordSheet = SpriteSheet({
+    image: image,
+    frameWidth: 32,
+    frameHeight: 16,
+    animations: {
+      sword: {
+        frames: '10..10',
+        frameRate: 1
+      },
+    }
+  });
+
   let obstacleSheet = SpriteSheet({
     image: image,
     frameWidth: 16,
@@ -432,13 +445,13 @@ let knightLegs = Sprite({
 });
 
 let sword = Sprite({
-  x: 50,
+  x: 30,
   y: 220,
   width: 64,
   height: 16,
-  color: "pink",
   dx: 0,
   opacity: 0,
+  animations: swordSheet.animations
 });
 
 let start = Scene({
@@ -580,7 +593,7 @@ let loop = GameLoop({
       if (AttackCooldown < 15) {
         // hide sword
         sword.opacity = 0;
-        sword.x = 50;
+        sword.x = 45;
       }
     }
     // attack end
@@ -703,7 +716,7 @@ let loop = GameLoop({
     }
 
     // update sword position when jumping
-    sword.y = knight.y + 30;
+    sword.y = knight.y + 25;
   }
   // console.log(rock.dx);
 },
@@ -721,4 +734,4 @@ let loop = GameLoop({
 loop.start()
 };
 
-image.src = 'sheet.webp';
+image.src = 'sheet.png';
