@@ -463,6 +463,22 @@ let arrow = Sprite({
   dead: false,
 });
 
+let arrowdown = Sprite({
+  x: 295,
+  y: 146,
+  width: 16,
+  height: 32,
+  animations: controlsSheet.animations,
+});
+
+let arrowup = Sprite({
+  x: 296,
+  y: 120,
+  width: 16,
+  height: 32,
+  animations: controlsSheet.animations,
+});
+
 let knight = Sprite({
   x: 30,
   y: ground,
