@@ -734,4 +734,4 @@ let loop = GameLoop({
 loop.start()
 };
 
-image.src = 'sheet.webp';
+image.src = 'assets/sheet.webp';
