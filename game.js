@@ -149,6 +149,22 @@ function drawPixelText(context, text, x, y, font, threshold, scalingFactor, wigg
     }
   });
 
+  let controlsSheet = SpriteSheet({
+    image: image,
+    frameWidth: 8,
+    frameHeight: 16,
+    animations: {
+      arrowup: {
+        frames: '45..45',
+        frameRate: 1
+      },
+      arrowdown: {
+        frames: '44..44',
+        frameRate: 1
+      },
+    }
+  });
+
   
   let swordSheet = SpriteSheet({
     image: image,
@@ -255,7 +271,7 @@ let jumpText = Text({
   y: 52,
   anchor: { x: 0.5, y: 0.5 },
   render() {
-    drawPixelText(this.context, ' JUMP:  W / ⬆', this.x, this.y, '12px Calibri', 13, 2, false);
+    drawPixelText(this.context, ' JUMP:  W / ', this.x, this.y, '12px Calibri', 13, 2, false);
   }
 });
 
@@ -264,7 +280,7 @@ let duckText = Text({
   y: 66,
   anchor: { x: 0.5, y: 0.5 },
   render() {
-    drawPixelText(this.context, 'SLIDE:   S / ⬇', this.x, this.y, '12px Calibri', 13, 2, false);
+    drawPixelText(this.context, 'SLIDE:   S / ', this.x, this.y, '12px Calibri', 13, 2, false);
   }
 });
 
@@ -352,7 +368,7 @@ let cloud1A = Sprite({
 });
 
 let cloud1B = Sprite({
-  x: 512,
+  x: 511,
   y: 0,
   width: 512,
   height: 256,
@@ -372,7 +388,7 @@ let cloud2A = Sprite({
 });
 
 let cloud2B = Sprite({
-  x: 512,
+  x: 510,
   y: 0,
   width: 512,
   height: 256,
@@ -417,6 +433,22 @@ let arrow = Sprite({
   dx: -3,
 });
 
+let arrowdown = Sprite({
+  x: 295,
+  y: ground + 15,
+  width: 16,
+  height: 32,
+  animations: controlsSheet.animations,
+});
+
+let arrowup = Sprite({
+  x: 296,
+  y: 120,
+  width: 16,
+  height: 32,
+  animations: controlsSheet.animations,
+});
+
 let knight = Sprite({
   x: 30,
   y: ground,
@@ -450,8 +482,7 @@ let sword = Sprite({
 
 let start = Scene({
   id: 'start',
-  color: "pink",
-  objects: [waterAndSkyA, waterAndSkyB, cloud2A, cloud2B, cloud1A, cloud1B, bridgeA, bridgeB, knightGameText, pressStartText, highScoreMainText, controlsText, jumpText, duckText, spaceText]
+  objects: [waterAndSkyA, waterAndSkyB, cloud2A, cloud2B, cloud1A, cloud1B, bridgeA, bridgeB, knightGameText, pressStartText, highScoreMainText, controlsText, jumpText, duckText, spaceText, arrowdown, arrowup]
 });
 
 let game = Scene({
@@ -479,6 +510,8 @@ let loop = GameLoop({
     cloud1B.playAnimation('clouds1');
     cloud2A.playAnimation('clouds2');
     cloud2B.playAnimation('clouds2');
+    arrowup.playAnimation('arrowup');
+    arrowdown.playAnimation('arrowdown');
 
     function loopBackground(backgroundOne, backgroundTwo) {
       if(backgroundOne.x <= -512) {
@@ -728,4 +761,4 @@ let loop = GameLoop({
 loop.start()
 };
 
-image.src = 'assets/sheet.webp';
+image.src = 'assets/sheet.png';
